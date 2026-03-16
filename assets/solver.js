@@ -57,6 +57,9 @@ elt.style.display = "none";
 
 
 function solve() {
+    generateFullModel();
+    standardizeModel();
+
     recorded_tableau = [];
     recorded_pivot = [];
     simplexModule().then(Module => {
@@ -487,6 +490,34 @@ function inputCoefficients() {
 }
 
 // listeners
+// for (let i = 0; i < var_num; i++) {
+//     let coe_id = "obj_coe" + i;
+//     document.getElementById(coe_id)
+//         .addEventListener("change", function () {
+//             obj_coe[0] = Number(this.value);
+//         });
+// }
+// for (let j = 0; j < constraint_num; j++) {
+//     for (let i = 0; i < var_num; i++) {
+//         let con_lhs_id = "con_coe" + j + '_' + i
+//         document.getElementById(con_lhs_id)
+//             .addEventListener("change", function () {
+//                 con_lhs[j][i] = Number(this.value);
+//             });
+//     }
+//     let con_rhs_id = "con_coe" + j + '_' + var_num;
+//     document.getElementById(con_rhs_id)
+//         .addEventListener("change", function () {
+//             con_rhs[j] = Number(this.value);
+//         });
+//
+//     let con_sense_id = "constraint_sense" + j;
+//     document.getElementById(con_sense_id)
+//         .addEventListener("change", function () {
+//             con_sense[j] = Number(this.value);
+//         });
+// }
+
 // document
 //     .getElementById("select_obj_sense")
 //     .addEventListener("change", function () {
@@ -525,6 +556,7 @@ function closeAlert() {
 }
 
 function standardizeModel() {
+    generateFullModel();
     const var_original_num = var_sign.length;
     for (let i = 0; i < var_original_num; i++) {
         if (var_sign[i] === 3 || var_sign[i] === 4) {
@@ -1078,6 +1110,7 @@ function renderLatexModel(obj_sense, obj_coe, con_lhs = [], con_sense = [], con_
 //     MathJax.typeset();
 // }
 
+
 function generateFullModel() {
     // document.getElementById("button_input_constr").disabled = true;
     // document.getElementById("button_add_constr").disabled = true;
@@ -1195,9 +1228,18 @@ function reset() {
 function drawPicture() {
     MathJax.typeset();
     elt.style.display = "block";
-    /**@type {HTMLInputElement} */
+    // /**@type {HTMLInputElement} */
     // let element = document.getElementById("picture_border_line");
     // element.style.display = "block";
+    generateFullModel();
+    // Remove all expressions
+    let arrs = calculator.getExpressions();
+    for (let arr of arrs) {
+        let id_str = arr.id;
+        calculator.removeExpression({id: id_str});
+    }
+
+
 
     // 添加约束边界线
     for (let i = 0; i < constraint_num; i++) {
