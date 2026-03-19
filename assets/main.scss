@@ -21,7 +21,7 @@ css中不同的类别：
 /* 默认浅色模式 */
 /* :root 等价于 <html> 标签，但它比直接用 html 更优先，常用于定义 CSS 变量 */
 :root {
-  --bg-color: #f7fff7; /* 淡绿色 */
+  --bg-color:  linear-gradient(to bottom, #f8fafc, #eef2f7); /* #f7fff7; /* 淡绿色 */
   --text-color: black;
   --link-color: blue;
   --lay-bg:rgba(0,0,0,0.3);
@@ -50,12 +50,12 @@ body {
 }
 
 .site-header {
-  border-bottom: 1px solid #ccc; /* 元素的下边界线 */
+  border-bottom: 2px solid #ccc; /* 元素的下边界线 */
 }
 
 .site-footer {
   margin-top: 70px; /* 让边界线和内容之间有空间 */
-  border-top: 1px solid #ccc; /* 元素的上边界线 */
+  border-top: 2px solid #ccc; /* 元素的上边界线 */
 }
 
 #my_alert{
