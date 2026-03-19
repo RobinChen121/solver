@@ -114,7 +114,7 @@ function solve() {
             document.getElementById("button_solve_detail").disabled = false;
             let text = "";
             // 如果是整数就原样输出，如果是浮点数则保留 4 位小数。
-            text += "The optimal value is:  ${Number(opt_value.toFixed(4)}\n";
+            text += `The optimal value is: ${Number(opt_value.toFixed(6))}\n`;
             // 最优解向量公式
             text += `\\(`;
             for (let i = 0; i < solution.length; i++) {
