@@ -17,4 +17,5 @@ Milestones for this online solver:
 - 2025/08/31: add the function and button of standardizing the model.
 - 2025/10/10: add the solve button in which the simplex algorithm is developed by C++.
 - 2026/01/04: add the function and button to show detailed tableau in Simplex computation.
-- 2026/03/16: update some functions so that they can track changes in the input  values.
+- 2026/03/16: update some functions so that they can track changes in the input values.
+- 2026/03/19: Polished the website's layout and styling.

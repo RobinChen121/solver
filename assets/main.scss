@@ -21,13 +21,21 @@ css中不同的类别：
 /* 默认浅色模式 */
 /* :root 等价于 <html> 标签，但它比直接用 html 更优先，常用于定义 CSS 变量 */
 :root {
-  --bg-color:  linear-gradient(to bottom, #f8fafc, #eef2f7); /* #f7fff7; /* 淡绿色 */
+  --bg-color:  #f8fafc; /* linear-gradient(to bottom, #f8fafc, #eef2f7); /* #f7fff7; /* 淡绿色 */
+
   --text-color: black;
   --link-color: blue;
   --lay-bg:rgba(0,0,0,0.3);
   --disabled-bg: #e8e8e8;
   --disabled-text: #aaaaaa;
   --disabled-border: #dddddd;
+  --card-bg: #ffffff;
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --accent-color: #3b82f6; /* 现代蓝色 */
+  --border-color: #e2e8f0;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
 }
 
 body {
@@ -37,8 +45,9 @@ body {
   background-color: var(--bg-color);
   top: 0 !important;
   //font-family: var(--base-font-family); /* 按顺序使用字体 */
-  font-family: system-ui !important;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif !important; /* 更现代的字体 */
   color: var(--text-color);
+  transition: background-color 0.3s ease; /* 切换主题时更平滑 */
 }
 
 /* 修改页面主内容宽度 */
@@ -51,14 +60,17 @@ body {
 
 .site-header {
   border-bottom: 2px solid #ccc; /* 元素的下边界线 */
+  padding: 1rem 0;
+  box-shadow: var(--shadow-sm);
 }
+
 
 .site-footer {
   margin-top: 70px; /* 让边界线和内容之间有空间 */
   border-top: 2px solid #ccc; /* 元素的上边界线 */
 }
 
-#my_alert{
+#my_alert{ /* 提示框 */
   display: none;
   position: fixed;
   flex-direction: column;
@@ -72,9 +84,12 @@ body {
 
   background: var(--bg-color);
 
-  /* 边框 & 圆角 */
+  ///* 边框 & 圆角 */
   border: 2px solid #555555;    /* 深灰边框，柔和 */
-  border-radius: 12px;             /* 圆角边框 */
+  /* 使用更现代的磨砂玻璃效果（可选） */
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 16px;
 
   /* 阴影效果，更柔和 */
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25), 0 4px 6px rgba(0, 0, 0, 0.1); /* 向右、下偏移量，阴阳半径与颜色*/
@@ -97,13 +112,22 @@ body {
 
 /* 深色模式 */
 [data-theme="dark"] {
-  --bg-color: #121212;
+  //--bg-color: #121212;
   --text-color: #e0e0e0 !important;
   --link-color: #bb86fc;
   --disabled-bg: #252525; /* 失效时更接近背景 */
   --lay-bg: rgba(255,255,255,0.1); /* 浅色半透明 */;
   --disabled-text: #888888; /* 让文字变得更不明显 */
   --disabled-border: #2d2d2d; /* 失效时边框更淡 */
+
+  --bg-color: #0f172a; /* 深蓝色调比纯黑更有高级感 */
+  --card-bg: #1e293b;
+  --text-main: #f1f5f9;
+  --text-muted: #94a3b8;
+  --accent-color: #60a5fa;
+  --border-color: #334155;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.4);
 }
 
 /* Keyboard key styling - 键盘按键样式 */
@@ -227,14 +251,47 @@ a:hover {
 /* 默认浅色模式下的按钮 */
 button {
   background-color: #f0f0f0;
-  color: #333;
+  color: var(--text-color);
   border: 1px solid #ccc;
-  padding: 8px 16px;
-  border-radius: 5px;
+  padding: 10px 20px;
+  font-weight: 500;
+  border-radius: 8px; /* 更圆润的角 */
   cursor: pointer;
-  transition: background 0.3s,
-  color 0.3s,
-  border 0.3s;
+  //transition: background 0.3s,
+
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    transform: translateY(-1px); /* 悬停浮动感 */
+    box-shadow: var(--shadow-md);
+    filter: brightness(1.1);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &.btn-reset {
+    margin-left: auto; /* 推到最右侧 */
+    background: #ef4444;
+    color: white;
+    border: none;
+    &:hover { background: #dc2626; }
+  }
+}
+
+input, select {
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
+  color: var(--text-main);
+  border-radius: 6px;
+  padding: 8px 12px;
+
+  &:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); /* 蓝色呼吸灯效果 */
+  }
 }
 
 /* 深色模式按钮 */
@@ -490,10 +547,15 @@ select:disabled:hover {
 
 /* Tetris canvas styling */
 #tetris {
-  background: #2a3a2a;
-  border: 1px solid #4a5a4a;
+  //background: #2a3a2a;
+  //border: 1px solid #4a5a4a;
   max-width: 100%;
   height: auto;
+
+  background: #000; /* 游戏区深黑色 */
+  border: 4px solid #334155;
+  border-radius: 4px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5), inset 0 0 10px rgba(255,255,255,0.05);
 }
 
 /* Mobile controls */
@@ -661,6 +723,11 @@ select:disabled:hover {
     font-size: 0.9em;
     padding-left: 20px;
   }
+
+  .input-row {
+    flex-direction: column; /* 变成垂直排列 */
+    align-items: stretch;   /* 按钮撑满宽度 */
+  }
 }
 
 /* Extra small screen optimization */
@@ -801,4 +868,147 @@ tr:last-child {
 .simplex-title {
   font-weight: bold;
   margin-bottom: 4px;
+}
+
+/* 主容器 */
+.simplex-main-container {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px; /* 统一模块间距 */
+}
+
+/* 卡片通用样式 */
+.control-card, .math-display-card, .status-box {
+  background: var(--card-bg, #fff);
+  border-radius: 12px;
+  padding: 24px;
+  border: 1px solid var(--border-color, #e2e8f0);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* 输入行布局 */
+.input-row {
+  display: flex;
+  align-items: flex-end; /* 标签对齐 */
+  flex-wrap: wrap;
+  gap: 20px;
+
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+
+    input[type="number"] {
+      width: 80px !important;
+    }
+
+  }
+}
+
+/* 如果你只想让 Objective 这一组离左边更远一点 */
+.objective-group {
+  margin-left: 50px; /* 在 gap 的基础上额外增加 间距 */
+}
+
+/* 数学显示区域 */
+.math-display-card {
+  background: var(--bg-color); /* 稍微深一点的背景凸显公式 */
+  text-align: center;
+  overflow-x: auto; /* 适配长公式 */
+  font-size: 1.1rem;
+}
+
+/* 状态框样式 */
+.status-box {
+  margin-top: 10px;
+  border-left: 4px solid #3b82f6;
+  &.highlight {
+    border-left-color: #f59e0b;
+  }
+}
+
+/* 底部提示 */
+.info-footer {
+  font-size: 0.9rem;
+  background: rgba(0,0,0,0.05);
+  padding: 15px;
+  border-radius: 8px;
+  [data-theme="dark"] & { background: rgba(255,255,255,0.05); }
+}
+
+.objective-switch {
+  display: flex;
+  height: 40px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px; // 稍微增加圆角更现代
+  overflow: hidden;
+  background: var(--card-bg);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05); // 增加整体微小的内凹感
+
+  .switch-btn {
+    flex: 1;
+    border: none;
+    background: transparent;
+    color: var(--text-muted, #64748b); // 默认状态文字颜色稍淡
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600; // 加粗字体提升可读性
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    height: 100%;
+    position: relative;
+
+    // 选中状态的样式优化
+    &.active {
+      // 使用 rgba 给予 15%-20% 的透明度，背景会透出来，显得很柔和
+      background-color: rgba(59, 130, 246, 0.6);
+      // 文字使用更深的蓝色（例如 Indigo 700 或 800）
+      color: var(--text-color);
+      font-weight: 700; // 稍微加粗，增强视觉重心
+
+      [data-theme="dark"] & {
+        // 深色模式下，背景深一些，文字亮一些
+        background-color: rgba(242, 244, 246, 0.25);
+      }
+    }
+
+  }
+}
+
+/* 在你的 CSS 中添加 */
+.objective-switch.locked {
+  opacity: 0.6;
+  user-select: none;
+  cursor: not-allowed !important;
+
+  .switch-btn {
+    cursor: not-allowed !important; /* 强制所有内部按钮显示禁止图标 */
+  }
+}
+
+// 调整一下间距，让它和其他 input 看起来更协调
+.input-group:has(.objective-switch) {
+  min-width: 120px;
+}
+
+
+.dynamic-content {
+  /* 基础边框和间距 */
+  border: 1px solid var(--border-color, #eee);
+  border-radius: 8px;      /* 增加圆角更现代 */
+  padding: 20px;           /* 内部留白 */
+  margin: 20px 0;          /* 外部间距 */
+  background-color: var(--card-bg, #fafafa); /* 淡淡的背景色区分区域 */
+
+  /* 核心：确保没内容时也撑开空间 */
+  min-height: 100px;
+
 }

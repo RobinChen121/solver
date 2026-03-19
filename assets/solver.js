@@ -31,14 +31,13 @@ let solution = [];
 let recorded_tableau = [];
 let recorded_pivot = [];
 
-let initial_model_latex =
-    "\\[\\begin{aligned}\n" +
-    "\\max\\quad &z = 2x_1 + 3x_2\\\\\n" +
-    "\\text{s.t.}\\quad&\\\\\n" +
-    "&2x_1 + x_2\\leq 4\\\\\n" +
-    "&x_1 + 2x_2\\leq 5\\\\\n" +
-    "&x_1\\geq 0, x_2\\geq 0." +
-    "\\end{aligned}\\]";
+// 使用模板字符串（反引号），注意反斜杠的转义
+let initial_model_latex = `\\[\\begin{aligned} 
+    \\max\\quad &z = 2x_1 + 3x_2\\\\ 
+    \\text{s.t.}\\quad& 2x_1 + x_2\\leq 4\\\\ 
+    &x_1 + 2x_2\\leq 5\\\\ 
+    &x_1\\geq 0, x_2\\geq 0. 
+    \\end{aligned}\\]`;
 
 /** @type {HTMLElement} */
 elt = document.getElementById("calculator");
@@ -298,6 +297,25 @@ function getNumVar() {
     return parseInt(elt.value);
 }
 
+function setObjectiveSense(value) {
+    // 1. 更新隐藏域的值 (0 为 Min, 1 为 Max)
+    document.getElementById("select_obj_sense").value = value;
+
+    // 2. 获取按钮元素
+    const btnMin = document.getElementById("btn_min");
+    const btnMax = document.getElementById("btn_max");
+
+    // 3. 切换 active 类名
+    if (value === 0) {
+        btnMin.classList.add("active");
+        btnMax.classList.remove("active");
+    } else {
+        btnMax.classList.add("active");
+        btnMin.classList.remove("active");
+    }
+
+}
+
 function inputCoefficients() {
     elt.style.display = "none";
     // Remove all expressions
@@ -310,6 +328,16 @@ function inputCoefficients() {
     obj_sense = Number(document.getElementById("select_obj_sense").value);
     var_num = Number(document.getElementById("input_var_num").value);
     constraint_num = Number(document.getElementById("input_con_num").value);
+
+    // 1. 获取按钮元素
+    const btnMin = document.getElementById("btn_min");
+    const btnMax = document.getElementById("btn_max");
+    // 2. 设置禁用属性
+    btnMin.disabled = true;
+    btnMax.disabled = true;
+    // 3. 增强：禁止鼠标事件和文本选取
+    document.querySelector(".objective-switch").classList.add("locked");
+
 
     document.getElementById("select_obj_sense").disabled = true;
     document.getElementById("input_var_num").disabled = true;
@@ -359,6 +387,7 @@ function inputCoefficients() {
         input.id = "obj_coe" + i; // 设置输入框 ID（可选）
         input.style.marginLeft = "0.5%";
         label.style.marginLeft = "0.5%";
+        input.style.width = "7%";
         // input.value = "0"; // 默认值
         // label.setAttribute("for", "obj_coe" + i);
 
@@ -390,6 +419,7 @@ function inputCoefficients() {
             /** @type {HTMLElement} */
             const input = document.createElement("input");
             input.type = "number"; // 设置输入框类型为文本
+            input.style.width = "7%";
             input.id = "con_coe" + j.toString() + '_' + i; // 设置输入框 ID（可选）
             if (i === 0)
                 input.style.marginLeft = "13%";
@@ -433,6 +463,7 @@ function inputCoefficients() {
                 const input = document.createElement("input");
                 input.type = "number"; // 设置输入框类型为文本
                 input.id = "con_coe" + j + '_' + var_num; // 设置输入框 ID（可选）
+                input.style.width = "7%";
                 model_container.appendChild(input);
             }
         }
@@ -1169,6 +1200,16 @@ function reset() {
     document.getElementById("input_con_num").value = "2";
     document.getElementById("select_obj_sense").disabled = false;
     document.getElementById("select_obj_sense").value = "1";
+
+    const btnMin = document.getElementById("btn_min");
+    const btnMax = document.getElementById("btn_max");
+    btnMin.disabled = false
+    btnMax.disabled = false
+    btnMax.classList.add("active");
+    btnMin.classList.remove("active");
+    // 恢复逻辑 (在 reset 中)
+    document.querySelector(".objective-switch").classList.remove("locked");
+
     document.getElementById("button_input_coe").disabled = false;
     document.getElementById("button_draw_picture").disabled = false;
     document.getElementById("button_solve").disabled = false;
@@ -1195,9 +1236,9 @@ function reset() {
     unsigned_index = [];
     document.getElementById("container_model").innerHTML = "";
 
-    /**@type {HTMLInputElement} */
-    let element = document.getElementById("picture_border_line");
-    element.style.display = "none";
+    // /**@type {HTMLInputElement} */
+    // let element = document.getElementById("picture_border_line");
+    // element.style.display = "none";
     // document.getElementById("container_solution").style.display = "none";
 
     new_input = false;
@@ -1227,7 +1268,13 @@ function reset() {
     }
 
     // innerHTML 会把 tag 也返回
-    document.getElementById("model_latex").innerText = initial_model_latex;
+    // 1. 获取目标元素
+    const modelElement = document.getElementById("model_latex");
+
+    // 2. 还原 HTML 内容
+    // 使用 innerHTML 确保 MathJax 能识别其中的标记
+    modelElement.innerHTML = initial_model_latex;
+
     MathJax.typeset();
 }
 
