@@ -969,9 +969,8 @@ tr:last-child {
     // 选中状态的样式优化
     &.active {
       // 使用 rgba 给予 15%-20% 的透明度，背景会透出来，显得很柔和
-      background-color: rgba(59, 130, 246, 0.6);
-      // 文字使用更深的蓝色（例如 Indigo 700 或 800）
-      color: var(--text-color);
+      background-color: rgb(6, 98, 248);
+      color:  white; //var(--text-color);
       font-weight: 700; // 稍微加粗，增强视觉重心
 
       [data-theme="dark"] & {
