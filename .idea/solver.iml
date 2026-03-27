@@ -10,5 +10,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="@types/desmos" level="application" />
     <orderEntry type="library" name="@types/mathjax" level="application" />
+    <orderEntry type="module" module-name="book-Python-Data-Science" />
   </component>
 </module>

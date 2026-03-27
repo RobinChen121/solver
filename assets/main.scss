@@ -496,15 +496,7 @@ select:disabled:hover {
   margin-right: 20px;
 }
 
-//文字在 class VIpgJd-ZVi9od-xl07Ob-lTBxed 下面的 span 标签下
-//:root 选择器等价于 html，表示文档的根元素
-//data-theme="dark" 是 属性选择器，它的作用是 只匹配那些 data-theme 属性值为 "dark" 的元素
-//在 CSS 中，.（点号） 代表类名选择器
-[data-theme="dark"] .VIpgJd-ZVi9od-xl07Ob-lTBxed span {
-  color: white !important; /* 深色模式下改为白色 */
-}
-
-.goog-te-gadget-icon {
+.goog-te-gadget-icon { // 更改谷歌翻译框外观
   background-image: url(https://placehold.it/32) !important;
   background-position: 0 0;
   height: 0 !important;
@@ -519,6 +511,15 @@ select:disabled:hover {
 .goog-te-banner-frame.skiptranslate {
   display: none !important;
 }
+
+//文字在 class VIpgJd-ZVi9od-xl07Ob-lTBxed 下面的 span 标签下
+//:root 选择器等价于 html，表示文档的根元素
+//data-theme="dark" 是 属性选择器，它的作用是 只匹配那些 data-theme 属性值为 "dark" 的元素
+//在 CSS 中，.（点号） 代表类名选择器
+[data-theme="dark"] .VIpgJd-ZVi9od-xl07Ob-lTBxed span {
+  color: white !important; /* 深色模式下改为白色 */
+}
+
 
 /* ===== Tetris Game Styles ===== */
 
