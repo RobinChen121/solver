@@ -220,38 +220,13 @@ a:hover {
 /* 画图容器的设置 */
 /* margin :0 auto左右自动分配空间，相当于居中， padding-bottom 让下面不覆盖 footer */
 #calculator {
-  width: 90%;
+  width: 100%;
   max-width: 900px;
   height: 750px;
   padding-bottom: 120px;
   margin: 0 auto 0px; /* 上，左右，下间距 */
-  /* 确保calculator容器中的文本颜色不受深色主题影响 */
-  color: #333 !important;
 }
 
-/* 深色模式下calculator容器的文本颜色 */
-[data-theme="dark"] #calculator {
-  color: #333 !important;
-}
-
-/* 确保calculator容器内的文本元素保持原有颜色，但li元素跟随主题 */
-#calculator p,
-#calculator label,
-#calculator div,
-#calculator span,
-#calculator strong,
-#calculator em {
-  color: #333 !important;
-}
-
-[data-theme="dark"] #calculator p,
-[data-theme="dark"] #calculator label,
-[data-theme="dark"] #calculator div,
-[data-theme="dark"] #calculator span,
-[data-theme="dark"] #calculator strong,
-[data-theme="dark"] #calculator em {
-  color: #333 !important;
-}
 
 /* 默认浅色模式下的按钮 */
 button {
