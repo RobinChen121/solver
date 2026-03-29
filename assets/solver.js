@@ -233,6 +233,7 @@ function renderSingleTableau(tableau, container, index, bool_two_stage, two_stag
     headerRow.appendChild(document.createElement("th")); // 左上角空白
     let unsigned_num = unsigned_index.length;
     let x_expressions = getVariablesExpression();
+    let record_decision_vars = Array(tableau[0].length).fill('');
     for (let j = 0; j < tableau[0].length - 1; j++) {
         const th = document.createElement("th");
         if (j < var_num + unsigned_num) {
@@ -243,21 +244,40 @@ function renderSingleTableau(tableau, container, index, bool_two_stage, two_stag
             th.textContent = `\\(a_{${j + 1 - var_num - var_slack_num - unsigned_num}}\\)`;
 
         headerRow.appendChild(th);
+        record_decision_vars[j] = th.textContent;
     }
     const th = document.createElement("th");
     th.textContent = "RHS";
     headerRow.appendChild(th);
     table.appendChild(headerRow);
 
-    // 数据行
+    // 数据行: tr (table row)
     for (let i = 0; i < tableau.length; i++) {
         const row = document.createElement("tr");
 
-        // 行标签
+        // 行标签, th (table header)
         const rowHeader = document.createElement("th");
-        rowHeader.textContent = (i === 0) ? "\\(Z\\)" : ``;
+        if (i===0)
+            rowHeader.textContent = "\\(Z\\)";
+        else {
+            let pivot_column = 0;
+            for (let j = 0; j < tableau[i].length; j++){ // 在第i行
+                if (Math.abs(tableau[i][j] - 1) < 1e-6){
+                    for (let k = 0; k < tableau.length; k++) {
+                        if (k === i)
+                            continue;
+                        if (Math.abs(tableau[k][j]) > 1e-6)
+                            break;
+                        pivot_column = j;
+                    }
+                }
+            }
+            rowHeader.textContent = record_decision_vars[pivot_column];
+        }
+
         row.appendChild(rowHeader);
 
+        // 单元格, td (table data)
         for (let j = 0; j < tableau[i].length; j++) {
             const td = document.createElement("td");
             td.textContent = tableau[i][j].toFixed(2);

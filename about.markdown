@@ -18,4 +18,23 @@ Milestones for this online solver:
 - 2025/10/10: add the solve button in which the simplex algorithm is developed by C++.
 - 2026/01/04: add the function and button to show detailed tableau in Simplex computation.
 - 2026/03/16: update some functions so that they can track changes in the input values.
-- 2026/03/19: Polished the website's layout and styling.
+- 2026/03/19: polished the website's layout and styling.
+- 2026/03/29: show the basic variables in the output tableau.
+
+
+
+<script src="https://giscus.app/client.js"
+        data-repo="RobinChen121/online-solver"
+        data-repo-id="R_kgDOOPOM7Q"
+        data-category="General"
+        data-category-id="DIC_kwDOOPOM7c4C5jLU"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="bottom"
+        data-theme="preferred_color_scheme"
+        data-lang="en"
+        crossorigin="anonymous"
+        async>
+</script>

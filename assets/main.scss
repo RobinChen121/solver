@@ -1014,6 +1014,6 @@ tr:last-child {
   background-color: var(--card-bg, #fafafa); /* 淡淡的背景色区分区域 */
 
   /* 核心：确保没内容时也撑开空间 */
-  min-height: 100px;
+  min-height: 50px;
 
 }
