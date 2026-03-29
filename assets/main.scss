@@ -884,7 +884,7 @@ tr:last-child {
 /* 主容器 */
 .simplex-main-container {
   max-width: 1000px;
-  margin: 20px auto; /* 外边距 */
+  margin: 10px auto; /* 外边距 */
   padding: 0 20px; // 内边距
   display: flex;
   flex-direction: column;
@@ -1022,6 +1022,13 @@ tr:last-child {
   background-color: var(--card-bg, #fafafa); /* 淡淡的背景色区分区域 */
 
   /* 核心：确保没内容时也撑开空间 */
-  min-height: 50px;
-
+  min-height: 30px;
 }
+
+div#container_tableaux { // 这个#是针对id，点 . 是针对 class 的
+  margin-top: 20px;
+}
+
+//.fancy-hr{
+//  margin-top: 15px;
+//}

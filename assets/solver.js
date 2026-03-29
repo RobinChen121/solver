@@ -153,7 +153,7 @@ function solve() {
         document.getElementById("container_solution").style.display = "block";
         console.log();
     });
-    document.getElementById("show_iteration").innerHTML = "";
+    document.getElementById("container_tableaux").innerHTML = "";
 }
 
 function solve_detail() {
@@ -164,11 +164,11 @@ function solve_detail() {
 
 // 渲染多个单纯形
 function renderMultipleTableaux() {
-    const container = document.getElementById("show_iteration");
+    const container = document.getElementById("container_tableaux");
     container.style.display = "block";
-    container.innerHTML = "";
-    // document.getElementById("show_iteration").style.display = "block";
-    // const element = document.getElementById("show_iteration");
+    container.innerHTML = "<hr class=\"fancy-hr\">";
+    // document.getElementById("container_tableaux").style.display = "block";
+    // const element = document.getElementById("container_tableaux");
 
     let bool_two_stage = recorded_tableau[0][0].length !== recorded_tableau[recorded_tableau.length - 1][0].length;
     let two_stage_start = recorded_tableau.length;
@@ -1176,7 +1176,7 @@ function generateFullModel() {
     document.getElementById("button_standardize_model").disabled = false;
     document.getElementById("button_solve_detail").disabled = true;
     document.getElementById("container_stand_model").style.display = "none";
-    document.getElementById("show_iteration").innerHTML = "";
+    document.getElementById("container_tableaux").innerHTML = "";
     // let var_num = getNumVar();
     if (var_num === 2) {
         document.getElementById("button_draw_picture").disabled = false;
