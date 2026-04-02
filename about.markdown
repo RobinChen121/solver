@@ -20,6 +20,7 @@ Milestones for this online solver:
 - 2026/03/16: update some functions so that they can track changes in the input values.
 - 2026/03/19: polished the website's layout and styling.
 - 2026/03/29: show the basic variables in the output tableau.
+- 2026/04/02: provide 3 pivoting rules.
 
 
 

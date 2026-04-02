@@ -5,7 +5,16 @@
  * @property {function(Array<string|Element>=):void} typesetClear
  */
 
-    // globe variables
+let Module;
+
+async function initModule() {
+    Module = await simplexModule();
+    console.log("WASM Module initialized");
+}
+
+window.addEventListener("load", initModule);
+
+// globe variables
 let obj_sense = 1; // 0 表示 min，1 表示 max
 let obj_coe = [2, 3];
 let con_lhs = [[2, 1], [1, 2]];
@@ -57,109 +66,138 @@ document
     });
 
 
-function solve() {
+async function solve() {
+    standardizeModel();
     if (new_input) {
         generateFullModel();
-        standardizeModel();
     }
+
 
     recorded_tableau = [];
     recorded_pivot = [];
-    simplexModule().then(Module => {
-        function arrayToVectorInt(arr) {
-            let v = new Module.VectorInt();
-            arr.forEach(x => v.push_back(x));
-            return v;
-        }
 
-        function arrayToVectorDouble(arr) {
-            let v = new Module.VectorDouble();
-            arr.forEach(x => v.push_back(x));
-            return v;
-        }
+    const Module = await simplexModule();  // 👈 核心修复！！
+    function arrayToVectorInt(arr) {
+        let v = new Module.VectorInt();
+        arr.forEach(x => v.push_back(x));
+        return v;
+    }
 
-        function vectorDoubleToArray(v) {
-            const arr = [];
-            const n = v.size();
-            for (let i = 0; i < n; i++) {
-                arr.push(v.get(i));
+    function arrayToVectorDouble(arr) {
+        let v = new Module.VectorDouble();
+        arr.forEach(x => v.push_back(x));
+        return v;
+    }
+
+    function vectorDoubleToArray(v) {
+        const arr = [];
+        const n = v.size();
+        for (let i = 0; i < n; i++) {
+            arr.push(v.get(i));
+        }
+        return arr;
+    }
+
+
+    function array2DToVectorVectorDouble(arr2d) {
+        let vv = new Module.VectorVectorDouble();
+        arr2d.forEach(row => vv.push_back(arrayToVectorDouble(row)));
+        return vv;
+    }
+
+    let anti_cycle_rule = Number(document.querySelector('input[name="pivotRule"]:checked').value);
+    const s = new Module.Simplex(obj_sense,
+        arrayToVectorDouble(obj_coe),
+        array2DToVectorVectorDouble(con_lhs),
+        arrayToVectorDouble(con_rhs),
+        arrayToVectorInt(con_sense),
+        arrayToVectorInt(var_sign),
+        anti_cycle_rule);
+    console.log("Simplex instance created successfully:", s);
+    s.standardize();
+    s.solve();
+    solution_status = s.getStatus();
+    let time = s.getTime();
+    if (solution_status === 0)
+        opt_value = s.getOptValue();
+    let simplex_solution = s.getOptSolution();
+    solution = vectorDoubleToArray(simplex_solution);
+    let element = document.getElementById("show_solution");
+    if (solution_status === 0) {
+        document.getElementById("button_solve_detail").disabled = false;
+        let text = "";
+        text += `Running time by C++ is ${time.toFixed(6)} seconds.\n`;
+        // 如果是整数就原样输出，如果是浮点数则保留 4 位小数。
+        text += `The optimal value is: ${Number(opt_value.toFixed(6))}\n`;
+        // 最优解向量公式
+        text += `\\(`;
+        for (let i = 0; i < solution.length; i++) {
+            let value = Math.round(solution[i] * 100) / 100;
+            text += `x_{${i + 1}} = ${value}`;
+            if (i !== solution.length - 1) text += ", ";
+        }
+        text += `\\).`;
+        element.innerText = text;
+
+        let tableaux = s.getRecordedTableau();
+        let pivot = s.getPivotIndex();
+        let N = tableaux.size();
+        for (let i = 0; i < N; i++) {
+            let tableau = tableaux.get(i);
+            let K = tableau.size();
+            let arr = [];
+            for (let j = 0; j < K; j++) {
+                let row = tableau.get(j);
+                arr.push(vectorDoubleToArray(row));
             }
-            return arr;
+            recorded_tableau.push(arr);
+        }
+        N = pivot.size();
+        for (let i = 0; i < N; i++) {
+            let cell = pivot.get(i);
+            recorded_pivot.push(vectorDoubleToArray(cell));
         }
 
-
-        function array2DToVectorVectorDouble(arr2d) {
-            let vv = new Module.VectorVectorDouble();
-            arr2d.forEach(row => vv.push_back(arrayToVectorDouble(row)));
-            return vv;
+    } else if (solution_status === 1) {
+        element.innerText = "The problem is unbounded";
+    } else if (solution_status === 2) {
+        element.innerText = "The problem is infeasible";
+    } else if (solution_status === 3) {
+        let tableaux = s.getRecordedTableau();
+        let pivot = s.getPivotIndex();
+        let N = tableaux.size();
+        for (let i = 0; i < N; i++) {
+            let tableau = tableaux.get(i);
+            let K = tableau.size();
+            let arr = [];
+            for (let j = 0; j < K; j++) {
+                let row = tableau.get(j);
+                arr.push(vectorDoubleToArray(row));
+            }
+            recorded_tableau.push(arr);
         }
-
-        const s = new Module.Simplex(obj_sense,
-            arrayToVectorDouble(obj_coe),
-            array2DToVectorVectorDouble(con_lhs),
-            arrayToVectorDouble(con_rhs),
-            arrayToVectorInt(con_sense),
-            arrayToVectorInt(var_sign));
-        console.log("Simplex instance created successfully:", s);
-        s.standardize();
-        s.solve();
-        solution_status = s.getStatus();
-        if (solution_status === 0)
-            opt_value = s.getOptValue();
-        let simplex_solution = s.getOptSolution();
-        solution = vectorDoubleToArray(simplex_solution);
-        let element = document.getElementById("show_solution");
-        if (solution_status === 0) {
-            document.getElementById("button_solve_detail").disabled = false;
-            let text = "";
-            // 如果是整数就原样输出，如果是浮点数则保留 4 位小数。
-            text += `The optimal value is: ${Number(opt_value.toFixed(6))}\n`;
-            // 最优解向量公式
-            text += `\\(`;
-            for (let i = 0; i < solution.length; i++) {
-                let value = Math.round(solution[i] * 100) / 100;
-                text += `x_{${i + 1}} = ${value}`;
-                if (i !== solution.length - 1) text += ", ";
-            }
-            text += `\\)`;
-            element.innerText = text;
-
-            let tableaux = s.getRecordedTableau();
-            let pivot = s.getPivotIndex();
-            let N = tableaux.size();
-            for (let i = 0; i < N; i++) {
-                let tableau = tableaux.get(i);
-                let K = tableau.size();
-                let arr = [];
-                for (let j = 0; j < K; j++) {
-                    let row = tableau.get(j);
-                    arr.push(vectorDoubleToArray(row));
-                }
-                recorded_tableau.push(arr);
-            }
-            N = pivot.size();
-            for (let i = 0; i < N; i++) {
-                let cell = pivot.get(i);
-                recorded_pivot.push(vectorDoubleToArray(cell));
-            }
-
-        } else if (solution_status === 1) {
-            element.innerText = "The problem is unbounded";
-        } else if (solution_status === 2) {
-            element.innerText = "The problem is infeasible";
+        N = pivot.size();
+        for (let i = 0; i < N; i++) {
+            let cell = pivot.get(i);
+            recorded_pivot.push(vectorDoubleToArray(cell));
         }
-        MathJax.typeset();
-        // 显示整个容器
-        document.getElementById("container_solution").style.display = "block";
-        console.log();
-    });
+        element.innerText = "The current pivot rule is cycling.";
+        document.getElementById("button_solve_detail").disabled = false;
+    }
+    MathJax.typeset();
+    // 显示整个容器
+    document.getElementById("container_solution").style.display = "block";
+    console.log();
+
     document.getElementById("container_tableaux").innerHTML = "";
 }
 
-function solve_detail() {
-    if (solution_status !== 0)
-        return;
-    renderMultipleTableaux();
+async function solve_detail() {
+    if (solution_status === 0 || solution_status === 3) {
+        await solve();
+        renderMultipleTableaux();
+    }
+
 }
 
 // 渲染多个单纯形
@@ -170,8 +208,8 @@ function renderMultipleTableaux() {
     // document.getElementById("container_tableaux").style.display = "block";
     // const element = document.getElementById("container_tableaux");
 
-    let bool_two_stage = recorded_tableau[0][0].length !== recorded_tableau[recorded_tableau.length - 1][0].length;
     let two_stage_start = recorded_tableau.length;
+    let bool_two_stage = recorded_tableau.length > 0 && recorded_tableau[0][0].length !== recorded_tableau[recorded_tableau.length - 1][0].length;
     if (bool_two_stage) {
         for (let i = 0; i < recorded_tableau.length; i++) {
             if (recorded_tableau[i + 1][0].length < recorded_tableau[i][0].length) {
@@ -240,7 +278,7 @@ function renderSingleTableau(tableau, container, index, bool_two_stage, two_stag
             th.textContent = `\\(x^{${x_expressions[j][0]}}_{${x_expressions[j][1]}}\\)`;
         } else if (j < var_num + var_slack_num + unsigned_num)
             th.textContent = `\\(s_{${j + 1 - var_num - unsigned_num}}\\)`;
-        else if (!bool_two_stage || index < two_stage_start + unsigned_num)
+        else if (bool_two_stage && j < two_stage_start + unsigned_num)
             th.textContent = `\\(a_{${j + 1 - var_num - var_slack_num - unsigned_num}}\\)`;
 
         headerRow.appendChild(th);
@@ -257,12 +295,12 @@ function renderSingleTableau(tableau, container, index, bool_two_stage, two_stag
 
         // 行标签, th (table header)
         const rowHeader = document.createElement("th");
-        if (i===0)
+        if (i === 0)
             rowHeader.textContent = "\\(Z\\)";
         else {
             let pivot_column = 0;
-            for (let j = 0; j < tableau[i].length; j++){ // 在第i行
-                if (Math.abs(tableau[i][j] - 1) < 1e-6){
+            for (let j = 0; j < tableau[i].length - 1; j++) { // 在第i行
+                if (Math.abs(tableau[i][j] - 1) < 1e-6) {
                     for (let k = 0; k < tableau.length; k++) {
                         if (k === i)
                             continue;
@@ -270,6 +308,7 @@ function renderSingleTableau(tableau, container, index, bool_two_stage, two_stag
                             break;
                         pivot_column = j;
                     }
+
                 }
             }
             rowHeader.textContent = record_decision_vars[pivot_column];
@@ -1313,7 +1352,6 @@ function drawPicture() {
             calculator.removeExpression({id: id_str});
         }
     }
-
 
 
     // 添加约束边界线

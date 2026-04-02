@@ -137,7 +137,6 @@ layout: home
 <!--</div>-->
 
 
-
 <!--<div id="calculator">-->
 <!--    <ul>-->
 <!--        <li>-->
@@ -168,20 +167,21 @@ layout: home
                 <input type="number" id="input_con_num" value="2" min="1" max="50" required>
             </div>
 
-<!--            <div class="input-group">-->
-<!--                <label for="select_obj_sense">Objective</label>-->
-<!--                <select id="select_obj_sense">-->
-<!--                    <option value="0">Min</option>-->
-<!--                    <option value="1" selected>Max</option>-->
-<!--                </select>-->
-<!--            </div>-->
+            <!--            <div class="input-group">-->
+            <!--                <label for="select_obj_sense">Objective</label>-->
+            <!--                <select id="select_obj_sense">-->
+            <!--                    <option value="0">Min</option>-->
+            <!--                    <option value="1" selected>Max</option>-->
+            <!--                </select>-->
+            <!--            </div>-->
 
-<!--            按钮设计-->
+            <!--            按钮设计-->
             <div class="input-group objective-group">
                 <label>Objective</label>
                 <div class="objective-switch">
                     <button type="button" id="btn_min" class="switch-btn" onclick="setObjectiveSense(0)">Min</button>
-                    <button type="button" id="btn_max" class="switch-btn active" onclick="setObjectiveSense(1)">Max</button>
+                    <button type="button" id="btn_max" class="switch-btn active" onclick="setObjectiveSense(1)">Max
+                    </button>
                     <input type="hidden" id="select_obj_sense" value="1">
                 </div>
             </div>
@@ -197,39 +197,64 @@ layout: home
     <div id="container_model" class="dynamic-content"></div>
 
     <div class="display-bar">
-        <button id="button_generate_model" class="btn-primary" onclick="generateFullModel()" disabled>Update Model Display</button>
+        <button id="button_generate_model" class="btn-primary" onclick="generateFullModel()" disabled>Update Model
+            Display
+        </button>
     </div>
 
     <div class="math-display-card">
         <p id="model_latex">
-            \[\begin{aligned} \max\quad &z = 2x_1 + 3x_2\\ \text{s.t.}\quad& 2x_1 + x_2\leq 4\\ &x_1 + 2x_2\leq 5\\ &x_1\geq 0, x_2\geq 0. \end{aligned}\]
+            \[\begin{aligned} \max\quad &z = 2x_1 + 3x_2\\ \text{s.t.}\quad& 2x_1 + x_2\leq 4\\ &x_1 + 2x_2\leq 5\\
+            &x_1\geq 0, x_2\geq 0. \end{aligned}\]
         </p>
     </div>
 
-    <div class="solver-controls">
+    <div class="solver-controls1">
         <button id="button_draw_picture" onclick="drawPicture()">Draw 2D Graph</button>
         <button id="button_standardize_model" onclick="standardizeModel()">Standardize Model</button>
-        <button id="button_solve" class="btn-solve" onclick="solve()">Solve by Simplex</button>
+    </div>
+
+    <div id="container_solution" class="solution-box" style="display: none">
+        <strong>Final Solution:</strong>
+        <p id="show_solution"></p>
+    </div>
+
+    <div id="container_stand_model" class="solution-box highlight" style="display: none">
+        <strong>Standardized Form:</strong>
+        <p id="stand_latex"></p>
+    </div>
+
+    <div class="solver-controls2">
+        <button id="button_solve" class="btn-solve" onclick="solve()">Solve by Primary Simplex</button>
+        <div class="pivot-options">
+            <span class="label-title">Pivot Rule:</span>
+
+            <label class="radio-item">
+                <input type="radio" name="pivotRule" value="0" checked>Most Negative
+            </label>
+
+            <label class="radio-item">
+                <input type="radio" name="pivotRule" value="1">Bland
+            </label>
+
+            <label class="radio-item">
+                <input type="radio" name="pivotRule" value="2">Lexicography
+            </label>
+        </div>
+    </div>
+
+
+
+    <div class="solver-controls3-detail">
         <button id="button_solve_detail" onclick="solve_detail()" disabled>Show Iterations</button>
     </div>
 
-    <div class="results-area">
-        <div id="container_stand_model" class="solution-box highlight" style="display: none">
-            <strong>Standardized Form:</strong>
-            <p id="stand_latex"></p>
-        </div>
-
-        <div id="container_solution" class="solution-box" style="display: none">
-            <strong>Final Solution:</strong>
-            <p id="show_solution"></p>
-        </div>
-
-        <div id="container_tableaux" style="display: none">
-<!--            <hr class="fancy-hr">-->
-<!--            <strong>Detailed Simplex steps:</strong>-->
-<!--            <div id="show_iteration"></div>-->
-        </div>
+    <div id="container_tableaux" style="display: none">
+        <!--            <hr class="fancy-hr">-->
+        <!--            <strong>Detailed Simplex steps:</strong>-->
+        <!--            <div id="show_iteration"></div>-->
     </div>
+
 
     <div id="calculator" class="info-footer">
         <ul>

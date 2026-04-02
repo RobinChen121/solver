@@ -1007,3 +1007,33 @@ div#container_tableaux { // 这个#是针对id，点 . 是针对 class 的
 //.fancy-hr{
 //  margin-top: 15px;
 //}
+
+.solver-controls2 {
+  display: flex;             /* 开启弹性布局 */
+  flex-direction: row;       /* 强制横向排列 */
+  align-items: center;       /* 垂直居中对齐 */
+  gap: 20px;                 /* 按钮与选项组之间的间距 */
+}
+/* 选项组容器 */
+.pivot-options {
+  display: flex;
+  align-items: center;       /* 确保文字与单选框垂直居中 */
+  gap: 15px;                 /* 每个选项之间的间距 */
+  flex-shrink: 0;            /* 防止容器被挤压变形 */
+}
+
+/* 每一个选项的 Label，即圆点与选项文字绑定起来 */
+.pivot-options label {
+  display: inline-flex;      /* 让 label 内部也变成弹性，方便对齐圆点 */
+  align-items: center;       /* 圆点与文字水平中心对齐 */
+  gap: 2px;              /* 如果 label 开启了 flex，用 gap 也能控制间距 */
+  white-space: nowrap;       /* ！！！防止单个选项内部（如 Lexicography）换行 */
+}
+
+/* 微调选项中的圆点 */
+.pivot-options input[type="radio"] {
+  width: 16px;               /* 统一圆点大小 */
+  height: 16px;
+  /* 选中时的颜色 */
+  accent-color: #6d716e;
+}
