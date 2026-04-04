@@ -21,7 +21,7 @@ let con_lhs = [[2, 1], [1, 2]];
 let con_rhs = [4, 5];
 let con_sense = [0, 0]; // 0 表示 <=, 1 表示 >=, 2 表示 =
 let var_sign = [0, 0]; // 0 表示非负连续，1 表示非正连续，2 表示连续，3 表示 0-1 变量，4 表示整数变量
-let new_input = false;
+// let new_input = false;
 
 let constraint_num = con_lhs.length;
 let var_num = obj_coe.length;
@@ -57,21 +57,17 @@ elt.style.display = "none";
 
 // 使用 disabled 属性来控制按钮的可用状态
 // 在一个按钮（button1）被点击后，使另一个按钮（button2）变为可用（启用）
-document
-    .getElementById("button_input_coe")
-    .addEventListener("click", function () {
-        // document.getElementById("button_generate_obj").disabled = false; // 使按钮可用
-        // // document.getElementById("button_input_constr").disabled = false;
-        new_input = true;
-    });
+// document
+//     .getElementById("button_input_coe")
+//     .addEventListener("click", function () {
+//         // document.getElementById("button_generate_obj").disabled = false; // 使按钮可用
+//         // // document.getElementById("button_input_constr").disabled = false;
+//         new_input = true;
+//     });
 
 
 async function solve() {
     standardizeModel();
-    if (new_input) {
-        generateFullModel();
-    }
-
 
     recorded_tableau = [];
     recorded_pivot = [];
@@ -278,7 +274,7 @@ function renderSingleTableau(tableau, container, index, bool_two_stage, two_stag
             th.textContent = `\\(x^{${x_expressions[j][0]}}_{${x_expressions[j][1]}}\\)`;
         } else if (j < var_num + var_slack_num + unsigned_num)
             th.textContent = `\\(s_{${j + 1 - var_num - unsigned_num}}\\)`;
-        else if (bool_two_stage && j < two_stage_start + unsigned_num)
+        else if (bool_two_stage && j < var_num + var_slack_num  + var_artificial_num + unsigned_num)
             th.textContent = `\\(a_{${j + 1 - var_num - var_slack_num - unsigned_num}}\\)`;
 
         headerRow.appendChild(th);
@@ -650,8 +646,8 @@ function closeAlert() {
 }
 
 function standardizeModel() {
-    if (new_input)
-        generateFullModel();
+    // if (new_input)
+    generateFullModel();
     const var_original_num = var_sign.length;
     for (let i = 0; i < var_original_num; i++) {
         if (var_sign[i] === 3 || var_sign[i] === 4) {
@@ -1300,7 +1296,7 @@ function reset() {
     // element.style.display = "none";
     // document.getElementById("container_solution").style.display = "none";
 
-    new_input = false;
+    // new_input = false;
     obj_coe = [2, 3];
     obj_sense = 1;
     con_lhs = [
@@ -1343,14 +1339,13 @@ function drawPicture() {
     // /**@type {HTMLInputElement} */
     // let element = document.getElementById("picture_border_line");
     // element.style.display = "block";
-    if (new_input) {
-        generateFullModel();
-        // Remove all expressions
-        let arrs = calculator.getExpressions();
-        for (let arr of arrs) {
-            let id_str = arr.id;
-            calculator.removeExpression({id: id_str});
-        }
+
+    generateFullModel();
+    // Remove all expressions
+    let arrs = calculator.getExpressions();
+    for (let arr of arrs) {
+        let id_str = arr.id;
+        calculator.removeExpression({id: id_str});
     }
 
 
