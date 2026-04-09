@@ -1,156 +1,6 @@
 ---
 layout: home
 ---
-<!--<p>-->
-<!--    <label for="input_var_num">Number of decision variables: </label><input type="number"-->
-<!--                                                                        style="width: 4%;"-->
-<!--                                                                        id="input_var_num"-->
-<!--                                                                        value="2"-->
-<!--                                                                        min="2"-->
-<!--                                                                        max="20" required>-->
-<!--    &lt;!&ndash;使用百分比来让输入框的宽度相对于其父容器的宽度进行调整。&ndash;&gt;-->
-
-<!--    <label for="input_con_num" style="margin-left: 3%">Number of constraints: </label><input type="number"-->
-<!--                                                                        style="width: 4%;"-->
-<!--                                                                        id="input_con_num"-->
-<!--                                                                        value="2"-->
-<!--                                                                        min="1"-->
-<!--                                                                        max="50" required>-->
-
-<!--    <label for="select_obj_sense" style="margin-left: 3%">Objective: </label>-->
-<!--    <select id="select_obj_sense">-->
-<!--        <option value="0" >Min</option>-->
-<!--        <option value="1" selected>Max</option>-->
-<!--    </select>-->
-
-<!--    <button id="button_reset" onclick="reset()" style="position: relative; float: right;">Reset-->
-<!--    </button>-->
-
-<!--</p>-->
-
-<!--<p>-->
-<!--    <button id="button_input_coe" onclick="inputCoefficients()">Input coefficients-->
-<!--    </button>-->
-<!--    &lt;!&ndash;<p id="ini_obj">$$x_1 + x_2$$</p>&ndash;&gt;-->
-<!--    &lt;!&ndash;<div> 是一个 HTML 元素，常用于分组和布局，不会直接显示任何内容，但可以用于包含其他 HTML 元素&ndash;&gt;-->
-<!--</p>-->
-<!--<div id="container_model"></div>-->
-
-<!--<p></p>-->
-<!--&lt;!&ndash;<p>&ndash;&gt;-->
-<!--&lt;!&ndash;    <button id="button_generate_obj" onclick="inputObj()" disabled>Generate objective&ndash;&gt;-->
-<!--&lt;!&ndash;    </button>&ndash;&gt;-->
-<!--&lt;!&ndash;</p>&ndash;&gt;-->
-
-<!--<p>-->
-<!--<button id="button_generate_model" style="margin-top: 2%" onclick="generateFullModel()"-->
-<!--        disabled>Generate/update full model-->
-<!--</button>-->
-<!--</p>-->
-
-<!--&lt;!&ndash;<p>&ndash;&gt;-->
-<!--&lt;!&ndash;    <button id="button_input_constr" onclick="inputConstraint()" disabled>Input coefficients for&ndash;&gt;-->
-<!--&lt;!&ndash;                                                                          a&ndash;&gt;-->
-<!--&lt;!&ndash;                                                                          constraint&ndash;&gt;-->
-<!--&lt;!&ndash;    </button>&ndash;&gt;-->
-<!--&lt;!&ndash;    <button id="button_add_constr" style="margin-left:3%" onclick="addConstraint()" disabled>Add&ndash;&gt;-->
-<!--&lt;!&ndash;                                                                                             the&ndash;&gt;-->
-<!--&lt;!&ndash;                                                                                             constraint&ndash;&gt;-->
-<!--&lt;!&ndash;                                                                                             in the&ndash;&gt;-->
-<!--&lt;!&ndash;                                                                                             model&ndash;&gt;-->
-<!--&lt;!&ndash;    </button>&ndash;&gt;-->
-<!--&lt;!&ndash;    <button id="button_remove_constr" style="margin-left:3%" onclick="removeConstraint()"&ndash;&gt;-->
-<!--&lt;!&ndash;            disabled>&ndash;&gt;-->
-<!--&lt;!&ndash;        Remove the&ndash;&gt;-->
-<!--&lt;!&ndash;        constraint&ndash;&gt;-->
-<!--&lt;!&ndash;    </button>&ndash;&gt;-->
-<!--&lt;!&ndash;</p>&ndash;&gt;-->
-
-<!--&lt;!&ndash;<div id="constr_input_container"></div>  &lt;!&ndash; <div> 是 块级元素（block element），不能嵌套在 <p> 里 &ndash;&gt;&ndash;&gt;-->
-
-<!--&lt;!&ndash;<p>&ndash;&gt;-->
-<!--&lt;!&ndash;    <button id="button_select_variable_type" style="margin-top: 2%" onclick="selectVariableType()" disabled>&ndash;&gt;-->
-<!--&lt;!&ndash;        Select&ndash;&gt;-->
-<!--&lt;!&ndash;        Variable&ndash;&gt;-->
-<!--&lt;!&ndash;        type&ndash;&gt;-->
-<!--&lt;!&ndash;    </button>&ndash;&gt;-->
-<!--&lt;!&ndash;</p>&ndash;&gt;-->
-<!--&lt;!&ndash;<div id="var_type_container"></div>&ndash;&gt;-->
-
-<!--<p>-->
-<!--&lt;!&ndash;    <button id="button_generate_full_model" style="margin-top: 2%" onclick="generateFullModel()"&ndash;&gt;-->
-<!--&lt;!&ndash;            disabled>Generate full model&ndash;&gt;-->
-<!--&lt;!&ndash;    </button>&ndash;&gt;-->
-
-<!--    <button id="button_draw_picture" style="margin-top: 1%;" onclick="drawPicture()"-->
-<!--    >Draw picture for 2D model-->
-<!--    </button>-->
-
-<!--    <button id="button_standardize_model" style="margin-top: 1%; margin-left:3%" onclick="standardizeModel()"-->
-<!--    >Standardize the model-->
-<!--    </button>-->
-
-<!--    <button id="button_solve" style="margin-top: 2%; margin-left:3%" onclick="solve()"-->
-<!--    >Solve by Simplex-->
-<!--    </button>-->
-
-<!--    <button id="button_solve_detail" style="margin-top: 2%; margin-left:3%" onclick="solve_detail()" disabled-->
-<!--    >Show Simplex details-->
-<!--    </button>-->
-
-<!--</p>-->
-
-<!--<div id="container_solution" style="display: none">-->
-<!--    <hr style="border: 1px solid darkgray; display: block">-->
-<!--    <p id="show_solution" style="margin-top: 1%"></p>-->
-<!--</div>-->
-
-<!--&lt;!&ndash; <hr> 默认是一个边框式的水平线，需要使用 border 或 background 才能控制颜色和透明度。&ndash;&gt;-->
-<!--<hr style="border: 1px solid darkgray;">-->
-<!--<p id="model_latex" style="margin-top: 1%">\[\begin{aligned}-->
-<!--                                           \max\quad &z = 2x_1 + 3x_2\\-->
-<!--                                           \text{s.t.}\quad&\\-->
-<!--                                           &2x_1 + x_2\leq 4\\-->
-<!--                                           &x_1 + 2x_2\leq 5\\-->
-<!--                                           &x_1\geq 0, x_2\geq 0.-->
-<!--                                           \end{aligned}\]</p>-->
-
-
-<!--<hr id="picture_border_line" style="border: 1px solid darkgray; display: none">-->
-
-<!--<div id="container_stand_model" style="display: none">-->
-<!--    <hr style="border: 1px solid darkgray;">-->
-<!--    <p style="margin-top: 1%">The standardized model is: </p>-->
-<!--    <p id="stand_latex" style="margin-top: 1%"></p>-->
-<!--</div>-->
-
-<!--<div id="container_tableaux" style="display: none">-->
-<!--    <hr style="border: 1px solid darkgray; display: block">-->
-<!--    <div id="show_iteration" style="margin-top: 1%;"></div>-->
-<!--</div>-->
-
-<!--<div id="overlay"></div>-->
-<!--&lt;!&ndash; 这两个对齐一个水平，一个垂直 &ndash;&gt;-->
-<!--<div id="my_alert">-->
-<!--    <p>A model with binary/integer variables can't be standardized.</p>-->
-<!--    <button onclick="closeAlert()">OK</button>-->
-<!--</div>-->
-
-
-<!--<div id="calculator">-->
-<!--    <ul>-->
-<!--        <li>-->
-<!--            \( x_1 \) and \( x_2 \) of the model are replaced by \( x \) and \( y \) in the picture.-->
-<!--        </li>-->
-<!--        <li>-->
-<!--            You may need to zoom in/out the picture to show the full feasible region.-->
-<!--        </li>-->
-<!--        <li>-->
-<!--            You may need to adjust the value of \(c\) in the figure below to substantially shift the-->
-<!--            objective line.-->
-<!--        </li>-->
-<!--    </ul>-->
-<!--</div>-->
 
 <!--抛弃基于 <p> 的“垂直堆叠”布局，改用卡片式分组布局。-->
 <div class="simplex-main-container">
@@ -214,15 +64,11 @@ layout: home
         <button id="button_standardize_model" onclick="standardizeModel()">Standardize Model</button>
     </div>
 
-    <div id="container_solution" class="solution-box" style="display: none">
-        <strong>Final Solution:</strong>
-        <p id="show_solution"></p>
-    </div>
-
     <div id="container_stand_model" class="solution-box highlight" style="display: none">
         <strong>Standardized Form:</strong>
         <p id="stand_latex"></p>
     </div>
+
 
     <div class="solver-controls2">
         <button id="button_solve" class="btn-solve" onclick="solve()">Solve by Primary Simplex</button>
@@ -243,6 +89,11 @@ layout: home
         </div>
     </div>
 
+
+    <div id="container_solution" class="solution-box" style="display: none">
+        <strong>Final Solution:</strong>
+        <p id="show_solution"></p>
+    </div>
 
 
     <div class="solver-controls3-detail">

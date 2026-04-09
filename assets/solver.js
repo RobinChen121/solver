@@ -647,7 +647,7 @@ function closeAlert() {
 
 function standardizeModel() {
     // if (new_input)
-    generateFullModel();
+    // generateFullModel();
     const var_original_num = var_sign.length;
     for (let i = 0; i < var_original_num; i++) {
         if (var_sign[i] === 3 || var_sign[i] === 4) {
@@ -1340,7 +1340,7 @@ function drawPicture() {
     // let element = document.getElementById("picture_border_line");
     // element.style.display = "block";
 
-    generateFullModel();
+    // generateFullModel();
     // Remove all expressions
     let arrs = calculator.getExpressions();
     for (let arr of arrs) {
