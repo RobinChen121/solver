@@ -25,7 +25,7 @@ Milestones for this online solver:
 
 
 <script src="https://giscus.app/client.js"
-        data-repo="RobinChen121/online-solver"
+        data-repo="RobinChen121/solver"
         data-repo-id="R_kgDOOPOM7Q"
         data-category="General"
         data-category-id="DIC_kwDOOPOM7c4C5jLU"
