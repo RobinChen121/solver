@@ -33,10 +33,36 @@ css中不同的类别：
   --text-main: #1e293b;
   --text-muted: #64748b;
   --accent-color: #3b82f6; /* 现代蓝色 */
+
   --border-color: #e2e8f0;
+  --button-color: #f0f0f0;
+  --parting-color: #b3b1b1;
   --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
   --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
 }
+
+/* 深色模式 */
+[data-theme="dark"] {
+  //--bg-color: #121212;
+  --text-color: #e0e0e0 !important;
+  --link-color: #bb86fc;
+  --disabled-bg: #252525; /* 失效时更接近背景 */
+  --lay-bg: rgba(255,255,255,0.1); /* 浅色半透明 */;
+  --disabled-text: #888888; /* 让文字变得更不明显 */
+  --disabled-border: #2d2d2d; /* 失效时边框更淡 */
+
+  --button-color: #333;
+  --parting-color: #f4efef;
+  --bg-color: #0f172a; /* 深蓝色调比纯黑更有高级感 */
+  --card-bg: #1e293b;
+  --text-main: #f1f5f9;
+  --text-muted: #94a3b8;
+  --accent-color: #0a2e5a;
+  --border-color: #334155;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.4);
+}
+
 
 body {
   margin: 0;                 /* 去掉浏览器默认的 body margin */
@@ -115,25 +141,6 @@ body {
   z-index: 999;
 }
 
-/* 深色模式 */
-[data-theme="dark"] {
-  //--bg-color: #121212;
-  --text-color: #e0e0e0 !important;
-  --link-color: #bb86fc;
-  --disabled-bg: #252525; /* 失效时更接近背景 */
-  --lay-bg: rgba(255,255,255,0.1); /* 浅色半透明 */;
-  --disabled-text: #888888; /* 让文字变得更不明显 */
-  --disabled-border: #2d2d2d; /* 失效时边框更淡 */
-
-  --bg-color: #0f172a; /* 深蓝色调比纯黑更有高级感 */
-  --card-bg: #1e293b;
-  --text-main: #f1f5f9;
-  --text-muted: #94a3b8;
-  --accent-color: #60a5fa;
-  --border-color: #334155;
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
-  --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.4);
-}
 
 /* Keyboard key styling - 键盘按键样式 */
 .keyboard-key {
@@ -230,7 +237,7 @@ a:hover {
 
 /* 默认浅色模式下的按钮 */
 button {
-  background-color: #f0f0f0;
+  background-color: var(--button-color);
   color: var(--text-color);
   border: 1px solid #ccc;
   padding: 10px 20px;
@@ -276,7 +283,6 @@ input, select {
 
 /* 深色模式按钮 */
 [data-theme="dark"] button {
-  background-color: #333;
   color: #e0e0e0;
   border: 1px solid #555;
 }
@@ -958,7 +964,7 @@ tr:last-child {
     // 选中状态的样式优化
     &.active {
       // 使用 rgba 给予 15%-20% 的透明度，背景会透出来，显得很柔和
-      background-color: rgb(6, 98, 248);
+      background-color: rgb(6, 119, 241);
       color:  white; //var(--text-color);
       font-weight: 700; // 稍微加粗，增强视觉重心
 
@@ -1015,15 +1021,29 @@ div#container_tableaux { // 这个#是针对id，点 . 是针对 class 的
   gap: 20px;                 /* 按钮与选项组之间的间距 */
 }
 /* 选项组容器 */
-.pivot-options {
+.radio-options {
   display: flex;
   align-items: center;       /* 确保文字与单选框垂直居中 */
   gap: 15px;                 /* 每个选项之间的间距 */
   flex-shrink: 0;            /* 防止容器被挤压变形 */
 }
 
+.radio-options.column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* 左对齐 */
+  gap: 10px;                 /* 每个选项之间的间距 */
+  flex-shrink: 0;            /* 防止容器被挤压变形 */
+}
+
+/* 专门给标题设定的样式 */
+.radio-options .label-title {
+  font-weight: 500;
+  margin-right: -10px;        /* 稍微拉近标题与第一个选项的距离 */
+}
+
 /* 每一个选项的 Label，即圆点与选项文字绑定起来 */
-.pivot-options label {
+.radio-options label {
   display: inline-flex;      /* 让 label 内部也变成弹性，方便对齐圆点 */
   align-items: center;       /* 圆点与文字水平中心对齐 */
   gap: 2px;              /* 如果 label 开启了 flex，用 gap 也能控制间距 */
@@ -1031,9 +1051,137 @@ div#container_tableaux { // 这个#是针对id，点 . 是针对 class 的
 }
 
 /* 微调选项中的圆点 */
-.pivot-options input[type="radio"] {
+.radio-options input[type="radio"] {
   width: 16px;               /* 统一圆点大小 */
   height: 16px;
   /* 选中时的颜色 */
-  accent-color: #6d716e;
+  accent-color: var(--accent-color);
 }
+
+/***************************/
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);  // antd 遮罩
+  align-items: center;
+  justify-content: center;
+}
+
+/* 弹框主体 */
+.modal-content {
+  width: 420px;
+  background: var(--bg-color);
+  color: var(--text-color);
+  border-radius: 8px;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.2);
+  animation: fadeIn 0.25s ease;
+  overflow: hidden;
+}
+
+/* header */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 5px;
+  //font-size: 16px;
+  font-weight: 500;
+  border-bottom: 1px solid var(--parting-color);
+}
+
+.close {
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+
+/* body */
+.modal-body {
+  padding: 10px;
+}
+
+//.label-title {
+//  display: block;
+//  margin-bottom: 10px;
+//  font-weight: 500;
+//}
+
+/* radio */
+.radio-item {
+  display: block;
+  margin: 8px 0;
+  cursor: pointer;
+}
+
+/* footer */
+.modal-footer {
+  padding: 5px 5px;
+  border-top: 1px solid var(--parting-color);
+  text-align: right;
+}
+
+/* 按钮 */
+.modal-button {
+  padding: 6px 15px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: var(--button-color);
+  cursor: pointer;
+  margin-left: 8px;
+}
+
+.modal-button.ok {
+  background-color: #0854ec;
+  color: white;
+  border: none;
+}
+[data-theme="dark"] .modal-button.ok {
+  background-color: #888c8c;
+  color: white;
+  border: none;
+}
+
+
+/* 动画 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/**********************************/
+
+/* 遮罩层：全屏半透明 */
+.my-alert-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  //它像是在网页主体上盖了一层“黑色的薄纱”
+  //增强对比：由于背景变暗了，用户视觉中心会自动聚焦在白色的弹框（Dialog）上
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center; /* 垂直居中 */
+  justify-content: center; /* 水平居中 */
+  z-index: 9999;
+}
+
+/* 弹窗主体：控制大小和字体 */
+.my-alert-content {
+  background: var(--bg-color);
+  padding: 20px;
+  width: 280px;            /* 框的大小 */
+  border-radius: 8px;
+  border: 2px solid var(--border-color);
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+/******************/

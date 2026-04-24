@@ -16,11 +16,12 @@ Milestones for this online solver:
 - 2025/08/25: develop the online tetris game with the help of [Cursor](https://cursor.com/home).
 - 2025/08/31: add the function and button of standardizing the model.
 - 2025/10/10: add the solve button in which the simplex algorithm is developed by C++.
-- 2026/01/04: add the function and button to show detailed tableau in Simplex computation.
+- 2026/01/04: add a button and function to show detailed tableau in Simplex computation.
 - 2026/03/16: update some functions so that they can track changes in the input values.
 - 2026/03/19: polished the website's layout and styling.
-- 2026/03/29: show the basic variables in the output tableau.
-- 2026/04/02: provide 3 pivoting rules.
+- 2026/03/29: make the basic variables shown in the output tableau.
+- 2026/04/02: provide 3 pivoting rules and define the CSS for the component Radio.
+- 2026/04/24: provide some linear programming examples for users to select and define the CSS for Modal and Alert.
 
 
 

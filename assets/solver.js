@@ -65,6 +65,84 @@ elt.style.display = "none";
 //         new_input = true;
 //     });
 
+function closeMyAlert() {
+    document.getElementById('myAlert').style.display = 'none';
+}
+
+function selectModel() {
+    document.getElementById("modal").style.display = "flex";
+}
+function closeModal() {
+    document.getElementById("modal").style.display = "none";
+}
+
+function selectExample() {
+    let example_num = Number(document.querySelector('input[name="exampleNO"]:checked').value)
+    switch (example_num) {
+        case 0:
+            obj_sense = 1;
+            obj_coe = [1.0, 5.0, 3.0];
+            con_lhs = [
+                [1, 2, 1],
+                [2, -1, 0],
+            ];
+            con_rhs = [3.0, 4.0];
+            con_sense = [2, 2];
+            var_sign = [0, 0, 0];
+            var_num = 3;
+            constraint_num = 2;
+            break;
+        case 1:
+            obj_sense = 1;
+            obj_coe = [0.75, -20, 0.5, -6];
+            con_lhs = [
+                [0.25, -8, -1, 9],
+                [0.5, -12, -0.5, 3],
+                [0, 0, 1, 0]
+            ];
+            con_rhs = [0.0, 0.0, 1.0];
+            con_sense = [0, 0, 0];
+            var_sign = [0, 0, 0, 0];
+            var_num = 4;
+            constraint_num = 3;
+            break;
+        case 2:
+            obj_sense = 1;
+            obj_coe = [-4, 10, -5];
+            con_lhs = [
+                [-1, 2, -1],
+                [1, 3, -1],
+                [0, -1, 2]
+            ];
+            con_rhs = [-2.0, 14.0, 2.0];
+            con_sense = [2, 0, 1];
+            var_sign = [0, 0, 2];
+            var_num = 3;
+            constraint_num = 3;
+            break;
+        case 3:
+            obj_sense = 0;
+            obj_coe = [1.0, 1.0, 1.0, 0.0];
+            con_lhs = [
+                [1, 2, 3, 0],
+                [-1, 2, 6, 0],
+                [0, 4, 9, 0],
+                [0, 0, 3, 1]
+            ];
+            con_rhs = [3.0, 2.0, 5.0, 1.0];
+            con_sense = [2, 2, 2, 2];
+            var_sign = [0, 0, 0, 0];
+            var_num = 4;
+            constraint_num = 4;
+            break;
+
+    }
+
+    renderLatexModel(obj_sense, obj_coe, con_lhs, con_sense, con_rhs, var_sign);
+
+    document.getElementById("modal").style.display = "none";
+}
+
 
 async function solve() {
     standardizeModel();
@@ -274,7 +352,7 @@ function renderSingleTableau(tableau, container, index, bool_two_stage, two_stag
             th.textContent = `\\(x^{${x_expressions[j][0]}}_{${x_expressions[j][1]}}\\)`;
         } else if (j < var_num + var_slack_num + unsigned_num)
             th.textContent = `\\(s_{${j + 1 - var_num - unsigned_num}}\\)`;
-        else if (bool_two_stage && j < var_num + var_slack_num  + var_artificial_num + unsigned_num)
+        else if (bool_two_stage && j < var_num + var_slack_num + var_artificial_num + unsigned_num)
             th.textContent = `\\(a_{${j + 1 - var_num - var_slack_num - unsigned_num}}\\)`;
 
         headerRow.appendChild(th);
@@ -401,6 +479,7 @@ function inputCoefficients() {
     document.getElementById("button_draw_picture").disabled = true;
     document.getElementById("button_solve").disabled = true;
     document.getElementById("button_solve_detail").disabled = true;
+    document.getElementById("button_select_model").disabled = true;
     document.getElementById("button_standardize_model").disabled = true;
     document.getElementById("container_solution").style.display = "none"
     document.getElementById("container_stand_model").style.display = "none"
@@ -1277,6 +1356,7 @@ function reset() {
     // document.getElementById("button_select_variable_type").disabled = true;
     document.getElementById("button_generate_model").disabled = true;
     document.getElementById("button_standardize_model").disabled = false;
+    document.getElementById("button_select_model").disabled = false;
     document.getElementById("container_stand_model")["style"].display = "none";
     document.getElementById("container_solution")["style"].display = "none";
     document.getElementById("container_tableaux")["style"].display = "none";
@@ -1334,6 +1414,10 @@ function reset() {
 }
 
 function drawPicture() {
+    if (var_num > 2) {
+        document.getElementById("myAlert").style.display = "flex";
+        return 0;
+    }
     MathJax.typeset();
     elt.style.display = "block";
     // /**@type {HTMLInputElement} */

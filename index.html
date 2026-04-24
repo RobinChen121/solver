@@ -46,9 +46,11 @@ layout: home
 
     <div id="container_model" class="dynamic-content"></div>
 
-    <div class="display-bar">
+    <div class="display-bar" style="display: flex; justify-content: space-between">
         <button id="button_generate_model" class="btn-primary" onclick="generateFullModel()" disabled>Update Model
             Display
+        </button>
+        <button id="button_select_model" class="btn-primary" onclick="selectModel()">Select A Model
         </button>
     </div>
 
@@ -72,7 +74,7 @@ layout: home
 
     <div class="solver-controls2">
         <button id="button_solve" class="btn-solve" onclick="solve()">Solve by Primary Simplex</button>
-        <div class="pivot-options">
+        <div class="radio-options">
             <span class="label-title">Pivot Rule:</span>
 
             <label class="radio-item">
@@ -112,5 +114,50 @@ layout: home
             <li>\( x_1, x_2 \) will be mapped to \( x, y \) in the graph.</li>
             <li>Use the zoom tools to adjust the feasible region view.</li>
         </ul>
+    </div>
+
+</div>
+
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <!-- 标题栏 -->
+        <div class="modal-header">
+            <span class="modal-title">Select A Model</span>
+            <span class="close" onclick="closeModal()">×</span>
+        </div>
+
+        <!-- 内容 -->
+        <div class="modal-body">
+            <div class="radio-options column" style="display: flex; flex-direction: column;">
+                <label class="radio-item">
+                    <input type="radio" name="exampleNO" value="0" checked>A two stage example
+                </label>
+
+                <label class="radio-item">
+                    <input type="radio" name="exampleNO" value="1">A cycling example
+                </label>
+
+                <label class="radio-item">
+                    <input type="radio" name="exampleNO" value="2">An example with unsigned variables
+                </label>
+
+                <label class="radio-item">
+                    <input type="radio" name="exampleNO" value="3">An example with column and row elimination
+                </label>
+            </div>
+        </div>
+
+        <!-- 底部按钮 -->
+        <div class="modal-footer">
+            <button class="modal-button cancel" onclick="closeModal()">Cancel</button>
+            <button class="modal-button ok" onclick = "selectExample()">OK</button>
+        </div>
+    </div>
+</div>
+
+<div id="myAlert" class="my-alert-overlay" style="display: none;">
+    <div class="my-alert-content">
+        <p id="alertMessage">We can only draw 2-dimension picture!</p>
+        <button class="modal-button ok" onclick="closeMyAlert()">OK</button>
     </div>
 </div>
