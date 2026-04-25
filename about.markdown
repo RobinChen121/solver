@@ -22,6 +22,7 @@ Milestones for this online solver:
 - 2026/03/29: make the basic variables shown in the output tableau.
 - 2026/04/02: provide 3 pivoting rules and define the CSS for the component Radio.
 - 2026/04/24: provide some linear programming examples for users to select and define the CSS for Modal and Alert.
+- 2026/04/25: revise the memory leakage issue when using WASM from C++.
 
 
 
