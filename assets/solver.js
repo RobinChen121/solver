@@ -6,12 +6,12 @@
  */
 
 /* 加载 simplex.js */
-let Module;
+let Module; // 定义一个全局变量 Module, 用来存放 WASM 模块实例
 async function initModule() {
-    Module = await simplexModule();
+    Module = await simplexModule(); // 调用 WASM 加载函数 simplexModule()
     console.log("WASM Module initialized");
 }
-window.addEventListener("load", initModule);
+window.addEventListener("load", initModule); // 在网页“完全加载完成”之后，自动执行 initModule() 函数
 
 // globe variables
 let obj_sense = 1; // 0 表示 min，1 表示 max
@@ -257,6 +257,11 @@ async function solve() {
             }
             tableaux.delete();
             pivot.delete();
+            if (solution_status === 3){
+                element.innerText = "The current pivot rule is cycling.";
+                document.getElementById("button_solve_detail").disabled = false;
+            }
+
         } else if (solution_status === 1) {
             element.innerText = "The problem is unbounded";
         } else if (solution_status === 2) {
