@@ -1,5 +1,4 @@
 ---
-# 双 --- 的作用是告诉 Jekyll 需要编译这个 SCSS 文件
 ---
 
 /*当你创建一个 SCSS 文件，前面加 _，比如 _base.scss，表示这是一个 partial（局部文件）*/
@@ -21,11 +20,12 @@ css中不同的类别：
 /* 默认浅色模式 */
 /* :root 等价于 <html> 标签，但它比直接用 html 更优先，常用于定义 CSS 变量 */
 :root {
-  --bg-color:  #f8fafc; /* linear-gradient(to bottom, #f8fafc, #eef2f7); /* #f7fff7; /* 淡绿色 */
+  --bg-color: #f8fafc; /* linear-gradient(to bottom, #f8fafc, #eef2f7); /* #f7fff7; /* 淡绿色 */
 
   --text-color: black;
   --link-color: blue;
-  --lay-bg:rgba(0,0,0,0.3);
+  --lay-bg: rgba(0, 0, 0, 0.3);
+  --grey: #555;
   --disabled-bg: #e8e8e8;
   --disabled-text: #aaaaaa;
   --disabled-border: #dddddd;
@@ -37,8 +37,8 @@ css中不同的类别：
   --border-color: #e2e8f0;
   --button-color: #f0f0f0;
   --parting-color: #b3b1b1;
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
-  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 /* 深色模式 */
@@ -47,7 +47,8 @@ css中不同的类别：
   --text-color: #e0e0e0 !important;
   --link-color: #bb86fc;
   --disabled-bg: #252525; /* 失效时更接近背景 */
-  --lay-bg: rgba(255,255,255,0.1); /* 浅色半透明 */;
+  --lay-bg: rgba(255, 255, 255, 0.1); /* 浅色半透明 */
+;
   --disabled-text: #888888; /* 让文字变得更不明显 */
   --disabled-border: #2d2d2d; /* 失效时边框更淡 */
 
@@ -59,15 +60,15 @@ css中不同的类别：
   --text-muted: #94a3b8;
   --accent-color: #0a2e5a;
   --border-color: #334155;
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
-  --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.4);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
 }
 
 
 body {
-  margin: 0;                 /* 去掉浏览器默认的 body margin */
-  padding: 0;                /* 去掉默认 padding */
-  line-height: 1.6;          /* 设置统一的行高 */
+  margin: 0; /* 去掉浏览器默认的 body margin */
+  padding: 0; /* 去掉默认 padding */
+  line-height: 1.6; /* 设置统一的行高 */
   background-color: var(--bg-color);
   top: 0 !important;
   //font-family: var(--base-font-family); /* 按顺序使用字体 */
@@ -101,7 +102,7 @@ body {
   border-top: 2px solid #ccc; /* 元素的上边界线 */
 }
 
-#my_alert{ /* 提示框 */
+#my_alert { /* 提示框 */
   display: none;
   position: fixed;
   flex-direction: column;
@@ -116,7 +117,7 @@ body {
   background: var(--bg-color);
 
   ///* 边框 & 圆角 */
-  border: 2px solid #555555;    /* 深灰边框，柔和 */
+  border: 2px solid #555555; /* 深灰边框，柔和 */
   /* 使用更现代的磨砂玻璃效果（可选） */
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
@@ -134,7 +135,8 @@ body {
 #overlay {
   display: none;
   position: fixed;
-  top:0; left:0;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   background: var(--lay-bg);
@@ -197,7 +199,6 @@ body {
 p, label, div, li {
   color: var(--text-color);
 }
-
 
 
 .site-title {
@@ -264,7 +265,10 @@ button {
     background: #ef4444;
     color: white;
     border: none;
-    &:hover { background: #dc2626; }
+
+    &:hover {
+      background: #dc2626;
+    }
   }
 }
 
@@ -496,9 +500,11 @@ select:disabled:hover {
 .VIpgJd-ZVi9od-ORHb-OEVmcd {
   display: none; // add !important if required
 }
+
 .goog-te-banner-frame.skiptranslate {
   display: none !important;
 }
+
 .goog-gt-tt {
   display: none !important;
 }
@@ -547,7 +553,7 @@ select:disabled:hover {
   background: #000; /* 游戏区深黑色 */
   border: 4px solid #334155;
   border-radius: 4px;
-  box-shadow: 0 0 20px rgba(0,0,0,0.5), inset 0 0 10px rgba(255,255,255,0.05);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.05);
 }
 
 /* Mobile controls */
@@ -636,7 +642,7 @@ select:disabled:hover {
   background: #4CAF50;
   cursor: pointer;
   border: 2px solid #2a3a2a;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
 .volume-slider::-moz-range-thumb {
@@ -646,7 +652,7 @@ select:disabled:hover {
   background: #4CAF50;
   cursor: pointer;
   border: 2px solid #2a3a2a;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
 /* Slider hover effects */
@@ -687,30 +693,30 @@ select:disabled:hover {
     align-items: center;
     gap: 15px;
   }
-  
+
   #tetris {
     width: 320px !important;
     height: 640px !important;
     max-width: 90vw;
     height: auto;
   }
-  
+
   #mobile-controls {
     width: 320px !important;
     justify-content: space-between;
   }
-  
+
   #mobile-controls button {
     padding: 10px 15px !important;
     font-size: 1em !important;
     min-width: 70px;
   }
-  
+
   .tetris-page h1 {
     font-size: 1.5em;
     margin-bottom: 15px;
   }
-  
+
   .tetris-page ul {
     font-size: 0.9em;
     padding-left: 20px;
@@ -718,7 +724,7 @@ select:disabled:hover {
 
   .input-row {
     flex-direction: column; /* 变成垂直排列 */
-    align-items: stretch;   /* 按钮撑满宽度 */
+    align-items: stretch; /* 按钮撑满宽度 */
   }
 }
 
@@ -784,7 +790,6 @@ select:disabled:hover {
 .tableau td:hover {
   background-color: #e0f7fa;
 }
-
 
 
 /* 第1、2行边框加粗 */
@@ -857,6 +862,7 @@ tr:last-child {
 .simplex-container {
   margin-bottom: 40px;
 }
+
 .simplex-title {
   font-weight: bold;
   margin-bottom: 4px;
@@ -880,7 +886,8 @@ tr:last-child {
   border: 1px solid var(--border-color, #e2e8f0);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
-.math-display-card{
+
+.math-display-card {
   padding: 0;
 }
 
@@ -918,14 +925,21 @@ tr:last-child {
 .math-display-card {
   background: var(--bg-color); /* 稍微深一点的背景凸显公式 */
   text-align: center;
-  overflow-x: auto; /* 适配长公式 */
+  //overflow-x: auto; /* 适配长公式，这个会产生滚动条，没必要 */
   font-size: 1.1rem;
 }
+
+///* 滚动条轨道  */
+//[data-theme="dark"] .math-display-card {
+//  scrollbar-color: var(--grey) #1e1e1e; /* 滑块颜色 轨道颜色 */
+//}
+
 
 /* 状态框样式 */
 .solution-box {
   margin-top: 10px;
   border-left: 4px solid #3b82f6;
+
   &.highlight {
     border-left-color: #f59e0b;
   }
@@ -934,10 +948,13 @@ tr:last-child {
 /* 底部提示 */
 .info-footer {
   font-size: 0.9rem;
-  background: rgba(0,0,0,0.05);
+  background: rgba(0, 0, 0, 0.05);
   padding: 15px;
   border-radius: 8px;
-  [data-theme="dark"] & { background: rgba(255,255,255,0.05); }
+
+  [data-theme="dark"] & {
+    background: rgba(255, 255, 255, 0.05);
+  }
 }
 
 .objective-switch {
@@ -965,7 +982,7 @@ tr:last-child {
     &.active {
       // 使用 rgba 给予 15%-20% 的透明度，背景会透出来，显得很柔和
       background-color: rgb(6, 119, 241);
-      color:  white; //var(--text-color);
+      color: white; //var(--text-color);
       font-weight: 700; // 稍微加粗，增强视觉重心
 
       [data-theme="dark"] & {
@@ -997,9 +1014,9 @@ tr:last-child {
 .dynamic-content {
   /* 基础边框和间距 */
   border: 1px solid var(--border-color, #eee);
-  border-radius: 8px;      /* 增加圆角更现代 */
-  padding: 10px;           /* 内部留白 */
-  margin: 0;          /* 外部间距 */
+  border-radius: 8px; /* 增加圆角更现代 */
+  padding: 10px; /* 内部留白 */
+  margin: 0; /* 外部间距 */
   background-color: var(--card-bg, #fafafa); /* 淡淡的背景色区分区域 */
 
   /* 核心：确保没内容时也撑开空间 */
@@ -1015,44 +1032,45 @@ div#container_tableaux { // 这个#是针对id，点 . 是针对 class 的
 //}
 
 .solver-controls2 {
-  display: flex;             /* 开启弹性布局 */
-  flex-direction: row;       /* 强制横向排列 */
-  align-items: center;       /* 垂直居中对齐 */
-  gap: 20px;                 /* 按钮与选项组之间的间距 */
+  display: flex; /* 开启弹性布局 */
+  flex-direction: row; /* 强制横向排列 */
+  align-items: center; /* 垂直居中对齐 */
+  gap: 20px; /* 按钮与选项组之间的间距 */
 }
+
 /* 选项组容器 */
 .radio-options {
   display: flex;
-  align-items: center;       /* 确保文字与单选框垂直居中 */
-  gap: 15px;                 /* 每个选项之间的间距 */
-  flex-shrink: 0;            /* 防止容器被挤压变形 */
+  align-items: center; /* 确保文字与单选框垂直居中 */
+  gap: 15px; /* 每个选项之间的间距 */
+  flex-shrink: 0; /* 防止容器被挤压变形 */
 }
 
 .radio-options.column {
   display: flex;
   flex-direction: column;
   align-items: flex-start; /* 左对齐 */
-  gap: 10px;                 /* 每个选项之间的间距 */
-  flex-shrink: 0;            /* 防止容器被挤压变形 */
+  gap: 10px; /* 每个选项之间的间距 */
+  flex-shrink: 0; /* 防止容器被挤压变形 */
 }
 
 /* 专门给标题设定的样式 */
 .radio-options .label-title {
   font-weight: 500;
-  margin-right: -10px;        /* 稍微拉近标题与第一个选项的距离 */
+  margin-right: -10px; /* 稍微拉近标题与第一个选项的距离 */
 }
 
 /* 每一个选项的 Label，即圆点与选项文字绑定起来 */
 .radio-options label {
-  display: inline-flex;      /* 让 label 内部也变成弹性，方便对齐圆点 */
-  align-items: center;       /* 圆点与文字水平中心对齐 */
-  gap: 2px;              /* 如果 label 开启了 flex，用 gap 也能控制间距 */
-  white-space: nowrap;       /* ！！！防止单个选项内部（如 Lexicography）换行 */
+  display: inline-flex; /* 让 label 内部也变成弹性，方便对齐圆点 */
+  align-items: center; /* 圆点与文字水平中心对齐 */
+  gap: 2px; /* 如果 label 开启了 flex，用 gap 也能控制间距 */
+  white-space: nowrap; /* ！！！防止单个选项内部（如 Lexicography）换行 */
 }
 
 /* 微调选项中的圆点 */
 .radio-options input[type="radio"] {
-  width: 16px;               /* 统一圆点大小 */
+  width: 16px; /* 统一圆点大小 */
   height: 16px;
   /* 选中时的颜色 */
   accent-color: var(--accent-color);
@@ -1065,7 +1083,7 @@ div#container_tableaux { // 这个#是针对id，点 . 是针对 class 的
   position: fixed;
   z-index: 1000;
   inset: 0;
-  background: rgba(0, 0, 0, 0.45);  // antd 遮罩
+  background: rgba(0, 0, 0, 0.45); // antd 遮罩
   align-items: center;
   justify-content: center;
 }
@@ -1076,7 +1094,7 @@ div#container_tableaux { // 这个#是针对id，点 . 是针对 class 的
   background: var(--bg-color);
   color: var(--text-color);
   border-radius: 8px;
-  box-shadow: 0 8px 28px rgba(0,0,0,0.2);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.2);
   animation: fadeIn 0.25s ease;
   overflow: hidden;
 }
@@ -1140,6 +1158,7 @@ div#container_tableaux { // 这个#是针对id，点 . 是针对 class 的
   color: white;
   border: none;
 }
+
 [data-theme="dark"] .modal-button.ok {
   background-color: #888c8c;
   color: white;
@@ -1164,7 +1183,10 @@ div#container_tableaux { // 这个#是针对id，点 . 是针对 class 的
 /* 遮罩层：全屏半透明 */
 .my-alert-overlay {
   position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   //它像是在网页主体上盖了一层“黑色的薄纱”
   //增强对比：由于背景变暗了，用户视觉中心会自动聚焦在白色的弹框（Dialog）上
   background: rgba(0, 0, 0, 0.5);
@@ -1178,10 +1200,31 @@ div#container_tableaux { // 这个#是针对id，点 . 是针对 class 的
 .my-alert-content {
   background: var(--bg-color);
   padding: 20px;
-  width: 280px;            /* 框的大小 */
+  width: 280px; /* 框的大小 */
   border-radius: 8px;
   border: 2px solid var(--border-color);
   text-align: center;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
-/******************/
+
+/**********************************/
+// demos
+[data-theme="dark"] .dcg-container {
+  --text-color: var(--text-color);
+}
+
+//使用 :is() 可以极大地简化书写，避免重复写 [data-theme="dark"]
+[data-theme="dark"] :is(
+  .dcg-resize-list-btn,
+  .dcg-add-expression-btn,
+  .dcg-action-undo,
+  .dcg-action-redo,
+  .dcg-action-toggle-edit,
+  .dcg-action-zoomrestore,
+  .dcg-action-zoomin,
+  .dcg-action-zoomout,
+  .dcg-settings-pillbox
+) {
+  color: black; // demos inverted color 会转化为白色
+}
+

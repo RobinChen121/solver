@@ -51,8 +51,11 @@ let initial_model_latex = `\\[\\begin{aligned}
 elt = document.getElementById("calculator");
 const calculator = Desmos.GraphingCalculator(elt, {
     // expressionsCollapsed: true, // // 默认折叠表达式列表
+    // invertedColors: false,
 });
 elt.style.display = "none";
+
+
 
 // 使用 disabled 属性来控制按钮的可用状态
 // 在一个按钮（button1）被点击后，使另一个按钮（button2）变为可用（启用）
@@ -1134,6 +1137,275 @@ function renderLatexModel(obj_sense, obj_coe, con_lhs = [], con_sense = [], con_
     MathJax.typeset(); // typeset 适用于小型公式更新，局部重新渲染, typesetPromise适合大规模更新
 }
 
+function generateFullModel() {
+    // document.getElementById("button_input_constr").disabled = true;
+    // document.getElementById("button_add_constr").disabled = true;
+    // document.getElementById("button_remove_constr").disabled = true;
+    // document.getElementById("button_select_variable_type").disabled = true;
+    document.getElementById("button_input_coe").disabled = true;
+    document.getElementById("button_standardize_model").disabled = false;
+    document.getElementById("button_solve_detail").disabled = true;
+    document.getElementById("container_stand_model").style.display = "none";
+    document.getElementById("container_tableaux").innerHTML = "";
+    // let var_num = getNumVar();
+    if (var_num === 2) {
+        document.getElementById("button_draw_picture").disabled = false;
+    }
+
+
+    var_sign.length = var_num;
+    obj_coe.length = var_num;
+    for (let i = 0; i < var_num; i++) {
+        let var_type_id = "select_var_type" + (i + 1);
+        /**@type {HTMLElement} */
+        let select = document.getElementById(var_type_id);
+        const {value} = select;
+        var_sign[i] = Number(value);
+        // select.disabled = true;
+
+        let obj_coe_id = "obj_coe" + (i);
+        obj_coe[i] = Number(document.getElementById(obj_coe_id).value);
+    }
+
+    con_lhs = Array.from({length: constraint_num}, () => Array(var_num).fill(0));
+    con_rhs.length = constraint_num;
+    for (let j = 0; j < constraint_num; j++) {
+        for (let i = 0; i < var_num; i++) {
+            let con_lhs_id = "con_coe" + j + '_' + i
+            con_lhs[j][i] = Number(document.getElementById(con_lhs_id).value);
+        }
+        let con_rhs_id = "con_coe" + j + '_' + var_num;
+        con_rhs[j] = Number(document.getElementById(con_rhs_id).value);
+        let con_sense_id = "constraint_sense" + j;
+        con_sense[j] = Number(document.getElementById(con_sense_id).value);
+
+    }
+    renderLatexModel(obj_sense, obj_coe, con_lhs, con_sense, con_rhs, var_sign);
+}
+
+function reset() {
+    document.getElementById("input_var_num").disabled = false; // 让按钮恢复可点击
+    document.getElementById("input_var_num").value = "2";
+    document.getElementById("input_con_num").disabled = false;
+    document.getElementById("input_con_num").value = "2";
+    document.getElementById("select_obj_sense").disabled = false;
+    document.getElementById("select_obj_sense").value = "1";
+
+    const btnMin = document.getElementById("btn_min");
+    const btnMax = document.getElementById("btn_max");
+    btnMin.disabled = false
+    btnMax.disabled = false
+    btnMax.classList.add("active");
+    btnMin.classList.remove("active");
+    // 恢复逻辑 (在 reset 中)
+    document.querySelector(".objective-switch").classList.remove("locked");
+
+    document.getElementById("button_input_coe").disabled = false;
+    document.getElementById("button_draw_picture").disabled = false;
+    document.getElementById("button_solve").disabled = false;
+    document.getElementById("button_generate_model").disabled = true;
+    document.getElementById("button_solve_detail").disabled = true;
+    // document.getElementById("button_generate_obj").disabled = true;
+    // document.getElementById("button_input_constr").disabled = true;
+    // document.getElementById("button_add_constr").disabled = true;
+    // document.getElementById("button_remove_constr").disabled = true;
+    // document.getElementById("button_select_variable_type").disabled = true;
+    document.getElementById("button_generate_model").disabled = true;
+    document.getElementById("button_standardize_model").disabled = false;
+    document.getElementById("button_select_model").disabled = false;
+    document.getElementById("container_stand_model")["style"].display = "none";
+    document.getElementById("container_solution")["style"].display = "none";
+    document.getElementById("container_tableaux")["style"].display = "none";
+    // con_latex_str = [];
+    // obj_latex_str = "";
+    // var_type_latex_str = "";
+    // document.getElementById("constr_input_container").innerHTML = "";
+    // document.getElementById("var_type_container").innerHTML = "";
+    // document.getElementById("container_model").innerHTML = "";
+    var_slack_num = 0;
+    var_artificial_num = 0;
+    unsigned_index = [];
+    document.getElementById("container_model").innerHTML = "";
+
+    // /**@type {HTMLInputElement} */
+    // let element = document.getElementById("picture_border_line");
+    // element.style.display = "none";
+    // document.getElementById("container_solution").style.display = "none";
+
+    // new_input = false;
+    obj_coe = [2, 3];
+    obj_sense = 1;
+    con_lhs = [
+        [2, 1],
+        [1, 2],
+    ];
+    con_sense = [0, 0];
+    con_rhs = [4, 5];
+    var_sign = [0, 0];
+    constraint_num = 2;
+    var_num = 2;
+    // stand_obj_coe = obj_coe.slice(); // 深拷贝
+    // stand_con_lhs = con_lhs.map(row => row.slice());
+    con_var_slack = [];
+    con_var_artificial = [];
+    standardized = false;
+
+    elt.style.display = "none";
+    // Remove all expressions
+    let arrs = calculator.getExpressions();
+    for (let arr of arrs) {
+        let id_str = arr.id;
+        calculator.removeExpression({id: id_str});
+    }
+
+    // innerHTML 会把 tag 也返回
+    // 1. 获取目标元素
+    const modelElement = document.getElementById("model_latex");
+
+    // 2. 还原 HTML 内容
+    // 使用 innerHTML 确保 MathJax 能识别其中的标记
+    modelElement.innerHTML = initial_model_latex;
+
+    MathJax.typeset();
+}
+
+function drawPicture() {
+    const currentTheme =
+        document.documentElement.getAttribute("data-theme");
+    if (calculator) {
+        calculator.updateSettings({
+            invertedColors: currentTheme === "dark"
+        });
+    }
+
+    if (var_num > 2) {
+        document.getElementById("myAlert").style.display = "flex";
+        return 0;
+    }
+    MathJax.typeset();
+    elt.style.display = "block";
+    // /**@type {HTMLInputElement} */
+    // let element = document.getElementById("picture_border_line");
+    // element.style.display = "block";
+
+    // generateFullModel();
+    // Remove all expressions
+    let arrs = calculator.getExpressions();
+    for (let arr of arrs) {
+        let id_str = arr.id;
+        calculator.removeExpression({id: id_str});
+    }
+
+
+    // 添加约束边界线
+    for (let i = 0; i < constraint_num; i++) {
+        let latex_str_left = "";
+        let var_str = "x";
+        for (let j = 0; j < var_num; j++) {
+            if (j === 1) {
+                var_str = "y";
+            }
+            latex_str_left += String(con_lhs[i][j]) + var_str;
+            if (j === 0 && con_lhs[i][j + 1] >= 0) {
+                latex_str_left += "+";
+            }
+        }
+
+        let latex_str_right = String(con_rhs[i]);
+        let latex_line = latex_str_left + "=" + latex_str_right;
+        calculator.setExpression({latex: latex_line}); // 约束条件的等式
+        let latex_str_sense = con_sense[i] === 0 ? "\\leq" : con_sense[i] === 1 ? "\\geq" : "=";
+
+        let latex_ueq = latex_str_left + latex_str_sense + latex_str_right;
+        // id_str = 'area' + String(i + 1);
+        calculator.setExpression({latex: latex_ueq, hidden: true});
+    }
+
+    // 可行域：约束条件
+    let latex_feasible = "\\max("; // 默认里面都是小于等于0的不等式
+    for (let i = 0; i < constraint_num; i++) {
+        switch (con_sense[i]) {
+            case 0:
+                latex_feasible += String(con_lhs[i][0]) + "x";
+                if (con_lhs[i][1] >= 0) {
+                    latex_feasible += "+";
+                }
+                latex_feasible += String(con_lhs[i][1]) + "y";
+                if (-con_rhs[i] >= 0) {
+                    latex_feasible += "+";
+                }
+                latex_feasible += String(-con_rhs[i]) + ",";
+                break;
+            case 1:
+                latex_feasible += String(-con_lhs[i][0]) + "x";
+                if (-con_lhs[i][1] >= 0) {
+                    latex_feasible += "+";
+                }
+                latex_feasible += String(-con_lhs[i][1]) + "y";
+                if (con_rhs[i] >= 0) {
+                    latex_feasible += "+";
+                }
+                latex_feasible += String(con_rhs[i]) + ",";
+                break;
+            default: // 相等时两个不等式
+                latex_feasible += String(con_lhs[i][0]) + "x";
+                if (con_lhs[i][1] >= 0) {
+                    latex_feasible += "+";
+                }
+                latex_feasible += String(con_lhs[i][1]) + "y";
+                if (-con_rhs[i] >= 0) {
+                    latex_feasible += "+";
+                }
+                latex_feasible += String(-con_rhs[i]) + ",";
+
+                latex_feasible += String(-con_lhs[i][0]) + "x";
+                if (-con_lhs[i][1] >= 0) {
+                    latex_feasible += "+";
+                }
+                latex_feasible += String(-con_lhs[i][1]) + "y";
+                if (con_rhs[i] >= 0) {
+                    latex_feasible += "+";
+                }
+                latex_feasible += String(con_rhs[i]) + ",";
+        }
+    }
+
+    // 可行域：自变量
+    for (let i = 0; i < var_num; i++) {
+        let var_str = i === 0 ? "x" : "y";
+        if (var_sign[i] === 0) {
+            let latex_var_sense = var_str + "\\geq 0";
+            calculator.setExpression({latex: latex_var_sense, hidden: true});
+            latex_feasible += "-" + var_str;
+            if (i === 0) {
+                latex_feasible += ",";
+            }
+        }
+    }
+    latex_feasible += ") \\leq 0";
+    // **填充可行域（仅交集部分）**
+    calculator.setExpression({
+        id: "feasible_region",
+        latex: latex_feasible,
+    });
+
+    // **目标函数等值线**
+    let latex_sign = obj_coe[1] >= 0 ? "+" : "";
+    let latex_obj =
+        String(obj_coe[0]) + "x" + latex_sign + String(obj_coe[1]) + "y=c";
+
+    calculator.setExpression({
+        id: "objective",
+        latex: latex_obj,
+        lineStyle: Desmos.Styles.DASHED,
+    });
+    // 设置变量 c 的初始值为 0（生成 slider）
+    calculator.setExpression({
+        id: "slider-c",
+        latex: "c = 0",
+    });
+}
+
 
 // function inputConstraint() {
 //     var_num = getNumVar();
@@ -1299,265 +1571,3 @@ function renderLatexModel(obj_sense, obj_coe, con_lhs = [], con_sense = [], con_
 //
 //     MathJax.typeset();
 // }
-
-
-function generateFullModel() {
-    // document.getElementById("button_input_constr").disabled = true;
-    // document.getElementById("button_add_constr").disabled = true;
-    // document.getElementById("button_remove_constr").disabled = true;
-    // document.getElementById("button_select_variable_type").disabled = true;
-    document.getElementById("button_input_coe").disabled = true;
-    document.getElementById("button_standardize_model").disabled = false;
-    document.getElementById("button_solve_detail").disabled = true;
-    document.getElementById("container_stand_model").style.display = "none";
-    document.getElementById("container_tableaux").innerHTML = "";
-    // let var_num = getNumVar();
-    if (var_num === 2) {
-        document.getElementById("button_draw_picture").disabled = false;
-    }
-
-
-    var_sign.length = var_num;
-    obj_coe.length = var_num;
-    for (let i = 0; i < var_num; i++) {
-        let var_type_id = "select_var_type" + (i + 1);
-        /**@type {HTMLElement} */
-        let select = document.getElementById(var_type_id);
-        const {value} = select;
-        var_sign[i] = Number(value);
-        // select.disabled = true;
-
-        let obj_coe_id = "obj_coe" + (i);
-        obj_coe[i] = Number(document.getElementById(obj_coe_id).value);
-    }
-
-    con_lhs = Array.from({length: constraint_num}, () => Array(var_num).fill(0));
-    con_rhs.length = constraint_num;
-    for (let j = 0; j < constraint_num; j++) {
-        for (let i = 0; i < var_num; i++) {
-            let con_lhs_id = "con_coe" + j + '_' + i
-            con_lhs[j][i] = Number(document.getElementById(con_lhs_id).value);
-        }
-        let con_rhs_id = "con_coe" + j + '_' + var_num;
-        con_rhs[j] = Number(document.getElementById(con_rhs_id).value);
-        let con_sense_id = "constraint_sense" + j;
-        con_sense[j] = Number(document.getElementById(con_sense_id).value);
-
-    }
-    renderLatexModel(obj_sense, obj_coe, con_lhs, con_sense, con_rhs, var_sign);
-}
-
-function reset() {
-    document.getElementById("input_var_num").disabled = false; // 让按钮恢复可点击
-    document.getElementById("input_var_num").value = "2";
-    document.getElementById("input_con_num").disabled = false;
-    document.getElementById("input_con_num").value = "2";
-    document.getElementById("select_obj_sense").disabled = false;
-    document.getElementById("select_obj_sense").value = "1";
-
-    const btnMin = document.getElementById("btn_min");
-    const btnMax = document.getElementById("btn_max");
-    btnMin.disabled = false
-    btnMax.disabled = false
-    btnMax.classList.add("active");
-    btnMin.classList.remove("active");
-    // 恢复逻辑 (在 reset 中)
-    document.querySelector(".objective-switch").classList.remove("locked");
-
-    document.getElementById("button_input_coe").disabled = false;
-    document.getElementById("button_draw_picture").disabled = false;
-    document.getElementById("button_solve").disabled = false;
-    document.getElementById("button_generate_model").disabled = true;
-    document.getElementById("button_solve_detail").disabled = true;
-    // document.getElementById("button_generate_obj").disabled = true;
-    // document.getElementById("button_input_constr").disabled = true;
-    // document.getElementById("button_add_constr").disabled = true;
-    // document.getElementById("button_remove_constr").disabled = true;
-    // document.getElementById("button_select_variable_type").disabled = true;
-    document.getElementById("button_generate_model").disabled = true;
-    document.getElementById("button_standardize_model").disabled = false;
-    document.getElementById("button_select_model").disabled = false;
-    document.getElementById("container_stand_model")["style"].display = "none";
-    document.getElementById("container_solution")["style"].display = "none";
-    document.getElementById("container_tableaux")["style"].display = "none";
-    // con_latex_str = [];
-    // obj_latex_str = "";
-    // var_type_latex_str = "";
-    // document.getElementById("constr_input_container").innerHTML = "";
-    // document.getElementById("var_type_container").innerHTML = "";
-    // document.getElementById("container_model").innerHTML = "";
-    var_slack_num = 0;
-    var_artificial_num = 0;
-    unsigned_index = [];
-    document.getElementById("container_model").innerHTML = "";
-
-    // /**@type {HTMLInputElement} */
-    // let element = document.getElementById("picture_border_line");
-    // element.style.display = "none";
-    // document.getElementById("container_solution").style.display = "none";
-
-    // new_input = false;
-    obj_coe = [2, 3];
-    obj_sense = 1;
-    con_lhs = [
-        [2, 1],
-        [1, 2],
-    ];
-    con_sense = [0, 0];
-    con_rhs = [4, 5];
-    var_sign = [0, 0];
-    constraint_num = 2;
-    var_num = 2;
-    // stand_obj_coe = obj_coe.slice(); // 深拷贝
-    // stand_con_lhs = con_lhs.map(row => row.slice());
-    con_var_slack = [];
-    con_var_artificial = [];
-    standardized = false;
-
-    elt.style.display = "none";
-    // Remove all expressions
-    let arrs = calculator.getExpressions();
-    for (let arr of arrs) {
-        let id_str = arr.id;
-        calculator.removeExpression({id: id_str});
-    }
-
-    // innerHTML 会把 tag 也返回
-    // 1. 获取目标元素
-    const modelElement = document.getElementById("model_latex");
-
-    // 2. 还原 HTML 内容
-    // 使用 innerHTML 确保 MathJax 能识别其中的标记
-    modelElement.innerHTML = initial_model_latex;
-
-    MathJax.typeset();
-}
-
-function drawPicture() {
-    if (var_num > 2) {
-        document.getElementById("myAlert").style.display = "flex";
-        return 0;
-    }
-    MathJax.typeset();
-    elt.style.display = "block";
-    // /**@type {HTMLInputElement} */
-    // let element = document.getElementById("picture_border_line");
-    // element.style.display = "block";
-
-    // generateFullModel();
-    // Remove all expressions
-    let arrs = calculator.getExpressions();
-    for (let arr of arrs) {
-        let id_str = arr.id;
-        calculator.removeExpression({id: id_str});
-    }
-
-
-    // 添加约束边界线
-    for (let i = 0; i < constraint_num; i++) {
-        let latex_str_left = "";
-        let var_str = "x";
-        for (let j = 0; j < var_num; j++) {
-            if (j === 1) {
-                var_str = "y";
-            }
-            latex_str_left += String(con_lhs[i][j]) + var_str;
-            if (j === 0 && con_lhs[i][j + 1] >= 0) {
-                latex_str_left += "+";
-            }
-        }
-
-        let latex_str_right = String(con_rhs[i]);
-        let latex_line = latex_str_left + "=" + latex_str_right;
-        calculator.setExpression({latex: latex_line}); // 约束条件的等式
-        let latex_str_sense = con_sense[i] === 0 ? "\\leq" : con_sense[i] === 1 ? "\\geq" : "=";
-
-        let latex_ueq = latex_str_left + latex_str_sense + latex_str_right;
-        // id_str = 'area' + String(i + 1);
-        calculator.setExpression({latex: latex_ueq, hidden: true});
-    }
-
-    // 可行域：约束条件
-    let latex_feasible = "\\max("; // 默认里面都是小于等于0的不等式
-    for (let i = 0; i < constraint_num; i++) {
-        switch (con_sense[i]) {
-            case 0:
-                latex_feasible += String(con_lhs[i][0]) + "x";
-                if (con_lhs[i][1] >= 0) {
-                    latex_feasible += "+";
-                }
-                latex_feasible += String(con_lhs[i][1]) + "y";
-                if (-con_rhs[i] >= 0) {
-                    latex_feasible += "+";
-                }
-                latex_feasible += String(-con_rhs[i]) + ",";
-                break;
-            case 1:
-                latex_feasible += String(-con_lhs[i][0]) + "x";
-                if (-con_lhs[i][1] >= 0) {
-                    latex_feasible += "+";
-                }
-                latex_feasible += String(-con_lhs[i][1]) + "y";
-                if (con_rhs[i] >= 0) {
-                    latex_feasible += "+";
-                }
-                latex_feasible += String(con_rhs[i]) + ",";
-                break;
-            default: // 相等时两个不等式
-                latex_feasible += String(con_lhs[i][0]) + "x";
-                if (con_lhs[i][1] >= 0) {
-                    latex_feasible += "+";
-                }
-                latex_feasible += String(con_lhs[i][1]) + "y";
-                if (-con_rhs[i] >= 0) {
-                    latex_feasible += "+";
-                }
-                latex_feasible += String(-con_rhs[i]) + ",";
-
-                latex_feasible += String(-con_lhs[i][0]) + "x";
-                if (-con_lhs[i][1] >= 0) {
-                    latex_feasible += "+";
-                }
-                latex_feasible += String(-con_lhs[i][1]) + "y";
-                if (con_rhs[i] >= 0) {
-                    latex_feasible += "+";
-                }
-                latex_feasible += String(con_rhs[i]) + ",";
-        }
-    }
-
-    // 可行域：自变量
-    for (let i = 0; i < var_num; i++) {
-        let var_str = i === 0 ? "x" : "y";
-        if (var_sign[i] === 0) {
-            let latex_var_sense = var_str + "\\geq 0";
-            calculator.setExpression({latex: latex_var_sense, hidden: true});
-            latex_feasible += "-" + var_str;
-            if (i === 0) {
-                latex_feasible += ",";
-            }
-        }
-    }
-    latex_feasible += ") \\leq 0";
-    // **填充可行域（仅交集部分）**
-    calculator.setExpression({
-        id: "feasible_region",
-        latex: latex_feasible,
-    });
-
-    // **目标函数等值线**
-    let latex_sign = obj_coe[1] >= 0 ? "+" : "";
-    let latex_obj =
-        String(obj_coe[0]) + "x" + latex_sign + String(obj_coe[1]) + "y=c";
-
-    calculator.setExpression({
-        id: "objective",
-        latex: latex_obj,
-        lineStyle: Desmos.Styles.DASHED,
-    });
-    // 设置变量 c 的初始值为 0（生成 slider）
-    calculator.setExpression({
-        id: "slider-c",
-        latex: "c = 0",
-    });
-}
